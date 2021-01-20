@@ -115,7 +115,7 @@ class Like(BaseModel):
 class Comentario(BaseModel):
     post = models.ForeignKey(Post, related_name = 'post_comentario',
             on_delete = models.CASCADE, null=False, blank = False)    
-    autor = models.ForeignKey(Autor, related_name = 'autor_like',
+    autor = models.ForeignKey(Autor, related_name = 'autor_comentario',
             on_delete = models.CASCADE, null=False, blank = False)      
     descripcion = models.CharField(
         'Descipción del comentario',
