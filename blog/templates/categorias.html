@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+
+
+    <link rel="stylesheet" href="{% static 'lib/datatables-1.10.20/css/dataTables.bootstrap4.min.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/css/responsive.bootstrap4.min.css' %}"/>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{% static 'peticiones.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block hero %}
+    <section class="d-flex justify-content-center align-items-center">
+    </section>
+{% endblock hero %}
+
+{% block body %}
+<!--block Para la tabla listado de categorias -->
+    <div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Categorias</h3>
+        </div>
+        <div class="card-body">
+            <table id="categorias-tabla" class="table table-bordered">
+                <button style="position: relative;float: right; margin-right: 1.2rem; margin-bottom: 1rem; "
+                        type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter"
+                        onclick="modalCreate()">
+                    Nuevo
+                </button>
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Creado</th>
+                    <th>Estado</th>
+                    <th style="width: 40px">Opc</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Fin block tabla listado de categorias -->
+    <!-- Modal para crear y editar categorias -->
+    <!-- modal start -->
+    <div class="modal fade" id="ModalCreateOrUpdate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="header-modal2">
+                        <h5 class="modal-title" id="titleModal" :text="title"></h5>
+                        <span><i class="fas fa-info-circle"></i><small id="subtitle" :text="subtitle">
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="scientific_name">Nombre</label>
+                                    <input type="text" step="any" id="nombre" class="form-control"
+                                           placeholder="Nombre Categoria" style="text-transform: uppercase;"
+                                           onkeyup="this.value = this.value.toUpperCase();">
+                                    <div class="invalid-feedback">
+                                        Por favor ingrese un nombre valido
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="scientific_name">Estado</label>
+                                    <select id="statusSelect" class="custom-select">
+                                        <option value=0 selected>Seleccione un estado</option>
+                                        <option value="true">ACTIVO</option>
+                                        <option value="false">INACTIVO</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Por favor seleccione una opción
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="modalButton" class="btn btn-success" onclick="validForm()">Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal end -->
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="{% static 'lib/datatables-1.10.20/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/datatables-1.10.20/plugins/responsive-2.2.3/js/responsive.bootstrap4.min.js' %}"></script>
+
+    <script type="application/javascript">
+        // obtenemos el token
+        var token = "{{ csrf_token }}"
+        localStorage.setItem("token", JSON.stringify(token));
+    </script>
+    <!-- Llamamos a nuestro archivo Js  -->
+    <script src="{% static '/blogJS/js/categorias.js' %}" type="text/javascript"></script>
+
+{% endblock %}
+{% block footer %}
+{% endblock footer %}

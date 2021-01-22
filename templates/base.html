@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Blog</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+
+      <!-- Sweetalert2 -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/vendor/icofont/icofont.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/vendor/remixicon/remixicon.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/vendor/owl.carousel/assets/owl.carousel.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/vendor/animate.css/animate.min.css' %} " rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %} " rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %} " rel="stylesheet">
+  {% block head %}
+
+  {% endblock %}
+  <!-- =======================================================
+  * Template Name: Mentor - v2.2.0
+  * Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo mr-auto"><a href="index.html">Blog</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="index.html">Inicio</a></li>
+
+          <li class="drop-down"><a>Categorias</a>
+            <ul>
+              <li><a href="#">Marketing</a></li>
+              <li><a href="#">Web Develop</a></li>
+            </ul>
+          </li>
+          <li class="drop-down"><a>Tags</a>
+            <ul>
+              <li><a href="#">Marketing</a></li>
+              <li><a href="#">Web Develop</a></li>
+            </ul>
+          </li>
+          <li><a href="contact.html">Mis Posts</a></li>
+
+        </ul>
+      </nav><!-- .nav-menu -->
+      
+
+      <a href="courses.html" class="get-started-btn">Iniciar Sesion</a>
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  {% block hero %}
+  <section id="hero" class="d-flex justify-content-center align-items-center">
+    
+    <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
+      <h1>Mantante al dia,<br>Tu Blog</h1>
+      <h2>Noticias e información techie en un solo lugar
+      </h2>
+      
+    </div>
+ 
+  </section><!-- End Hero -->
+
+  {% endblock hero %} 
+
+
+  <main id="main">
+      
+    {% block body %}
+
+    {% endblock %} 
+
+    <!-- ======= Popular Courses Section ======= -->
+
+
+
+  </main><!-- End #main -->
+  {% block footer%}
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>Blog</h3>
+            <p>
+              Andres Navarro <br>
+              <br><br>
+              <strong>Phone:</strong> +57 3017860400<br>
+              <strong>Email:</strong> andreesnavarroo@example.com<br>
+            </p>
+          </div>
+
+          <div class="col-lg-2 col-md-6 footer-links">
+            <h4>Navega</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Inicio</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Categorias</a></li>
+ 
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Tags</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-4 col-md-6 footer-newsletter">
+            <h4>Join Our Newsletter</h4>
+            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Subscribe">
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container d-md-flex py-4">
+
+      <div class="mr-md-auto text-center text-md-left">
+        <div class="copyright">
+          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
+          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+      </div>
+      <div class="social-links text-center text-md-right pt-3 pt-md-0">
+        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+  {% endblock footer%}
+  <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+
+  
+  <script src=" {% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src=" {% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
+  <script src=" {% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
+  <script src=" {% static 'assets/vendor/counterup/counterup.min.js' %}"></script>
+  <script src=" {% static 'assets/vendor/owl.carousel/owl.carousel.min.js' %}"></script>
+  <script src=" {% static 'assets/vendor/aos/aos.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src=" {% static 'assets/js/main.js' %}"></script>
+
+  {% block javascript %}
+  {% endblock javascript %}
+</body>
+
+</html>
