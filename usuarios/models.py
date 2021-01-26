@@ -38,7 +38,7 @@ class User(AbstractUser):
 
 #model administradores
 class Autor(User):
-    imagen = models.ImageField(upload_to='autor/%Y/%m/%d', null=True, blank=True)
+    imagen = models.ImageField(upload_to='autor/%Y/%m/%d',  default = 'user.png', null=True, blank=True)
     historical = HistoricalRecords()
     class Meta:
         verbose_name = "Autor"

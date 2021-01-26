@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{% static 'peticiones.js' %}" type="text/javascript"></script>
+{% endblock %}
+{% block hero %}
+{% endblock hero %}
+{% block conten %}
+<style>
+  .post-cata {
+  background-color: #5FCF80;
+  padding: 8px 15px 6px;
+  border-radius: 2px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  border: none;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 15px;
+  display: inline-block;
+  }
+  .post-like {
+  color: black;
+  background-color: #e8ede8;
+  padding: 8px 15px 6px;
+  border-radius: 2px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  border: none;
+  line-height: 1;
+  margin-bottom: 15px;
+  display: inline-block;
+  }
+</style>
+    <br>
+    <br>
+  
+      <!-- ======= Cource Details Section ======= -->
+      <section id="course-details" class="course-details">
+        <div class="container" data-aos="fade-up">
+          <div class="row">
+            <div class="col-lg-8">
+              <img src="{% static 'assets/img/course-1.jpg' %}" class="img-fluid" alt="">
+              <h3>{{post.titulo}}</h3>
+              <h4><a class="post-cata">{{post.categoria}}</a></h4>
+              <div class="trainer-rank d-flex align-items-center">
+                <h4 id="like_post" class="post-like"><i class="bx bx-heart">&nbsp;{{post.like_cantidad}} Likes</i></h4>
+                &nbsp;&nbsp;
+                <h4 class="post-like"><i class="bx bx-comment">&nbsp;{{post.comentarios_cantidad}} Comentarios</i></h4>
+              </div>
+              <p>
+               {{post.contenido}}
+              </p>
+            </div>
+            <div class="col-lg-4">
+            </div>
+          </div>
+        </div>
+      </section><!-- End Cource Details Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+        <div class="container" data-aos="fade-up">
+          <div class="row mt-5">
+            <div class="col-lg-8 mt-5 mt-lg-0">
+              <!-- Comments Form -->
+              <div class="card my-4">
+                <h5 class="card-header">Escribir Comentario:</h5>
+                <div class="card-body">
+                  <form>
+                    <div class="form-group">
+                      <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                  </form>
+                </div>
+              </div>
+              <!-- Single Comment -->
+              <div class="media mb-4">
+                  <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                  <div class="media-body">
+                    <h5 class="mt-0">Andres Navarro</h5>
+                    Me gusta mucho este post por que dice todo lo relacionado con 
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section><!-- End Contact Section -->
+  
+      <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+      <script type="application/javascript">
+        // obtenemos el token
+        var token = "{{ csrf_token }}"
+        var postdet = "{{ post }}"
+        // obtenemos el id del post
+        data = {
+          'pk_post':"{{ post.id }}"
+        }
+        // Like Post
+        $('#like_post').click(function(){
+          console.log("escuchando")
+          post('/api-like-posts/', data, token).then(result => {
+            
+          });
+        })
+      </script>          
+      
+      
+{% endblock %} 

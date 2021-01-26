@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Blog | Inicio de sesion</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+	<link href="{% static 'assets/css/util.css' %}" rel="stylesheet">
+<!--===============================================================================================-->
+</head>
+<body>
+	<div class="container-login100" >
+		<div style="text-align: center;" class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
+			<form class="login100-form validate-form" method="POST">
+				<div>
+					<img  style="width: 11rem;" src="{% static 'assets/img/logo.png' %}">
+				</div>
+				
+				{% csrf_token %}
+				{% if form.errors %}
+					<ul class="errorlist nonfield">
+						<p>
+							Por favor, introduzca un nombre de usuario y clave correctos. Observe que ambos campos pueden ser sensibles a mayúsculas.
+						</p>
+					</ul>
+					<br>
+				{% endif %}
+				<div class="wrap-input100 validate-input m-b-20">
+					<input type="text" name="username" id="id_username" class="input100" placeholder="Usuario" autocomplete="on" data-validate="Ingrese su usuario">
+					<span class="focus-input100"></span>
+				</div>
+				<div class="wrap-input100 validate-input m-b-25">
+					<input type="password" name="password" id="id_password" class="input100"  placeholder="Contraseña"  data-validate = "Ingrese su contraseña">
+					<span class="focus-input100"></span>
+				</div>
+				<div class="container-login100-form-btn" >
+					<button class="login100-form-btn login">
+						Ingresar
+					</button>
+				
+				</div>
+				
+				<div class="text-center p-t-57 p-b-20">
+					<span class="txt1">
+						<a href="#" class="txt2">
+							No tienes cuenta? Registrate!
+							</a>
+					</span>
+				</div>
+			</form>
+
+		</div>
+	</div>
+	
+
+</body>
+</html>

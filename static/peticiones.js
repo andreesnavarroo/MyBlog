@@ -1,5 +1,6 @@
 
-// Archivo para hacer las peticiones Http
+// Archivo para hacer las peticiones Http, para consumir la api
+
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -13,6 +14,8 @@ const Toast = Swal.mixin({
 })
 
 
+// Get data
+// obtenemos la data recibiendo la URl
 async function get(url) {
     return await axios.get(url).then(result => {
         if(result.code ==! 1){
@@ -24,6 +27,7 @@ async function get(url) {
 }
 
 // Post data
+// recibimos la URl, la data y token
 async function post(url, data, csrf_token){
     return  await axios.post(url, data, {headers: {"X-CSRFToken": csrf_token,'Content-Type': 'application/json'}}).then(result => {
         if(result.data.code == 2){
@@ -120,6 +124,7 @@ async function put(url, data, csrf_token){
     })
 }
 
+// Delete 
 async function deleted(url, csrf_token){
     return  await axios.delete(url, {headers: {"X-CSRFToken": csrf_token,'Content-Type': 'application/json' }}).then(result => {
         if(result.data.code == 2){

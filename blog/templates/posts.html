@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
-
-
-
-
-{% block body %}
+{% block head %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{% static 'peticiones.js' %}" type="text/javascript"></script>
+{% endblock %}
+{% block conten %}
 <section id="popular-courses" class="courses">
     <div class="container" data-aos="fade-up">
 
@@ -13,88 +13,11 @@
         <p>Posts Recientes</p>
       </div>
 
-      <div class="row" data-aos="zoom-in" data-aos-delay="100">
+      <div id="card_post" class="row" data-aos="zoom-in" data-aos-delay="100">
 
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-          <div class="course-item">
-              <img src="{% static 'assets/img/course-2.jpg' %}" class="img-fluid" alt="...">
-            <div class="course-content">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Web Development</h4>
-                <i class="bx bx-calendar">Jul 22, 2020 </i>
-              </div>
 
-              <h3><a href="course-details.html">Website Design</a></h3>
-              <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-              <div class="trainer d-flex justify-content-between align-items-center">
-                <div class="trainer-profile d-flex align-items-center">
-                  <img src="{% static 'assets/img/trainers/trainer-1.jpg' %}" class="img-fluid" alt="...">
-                  <span>Antonio</span>
-                </div>
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-heart"></i>&nbsp;42
-                  &nbsp;&nbsp;
-                  <i class="bx bx-comment"></i>&nbsp;42
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> <!-- End Course Item-->
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-          <div class="course-item">
-            <img src="{% static 'assets/img/course-1.jpg' %}" class="img-fluid" alt="...">
-            <div class="course-content">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Marketing</h4>
-                <i class="bx bx-calendar">Jul 22, 2020 </i>
-              </div>
-
-              <h3><a href="course-details.html">Search Engine Optimization</a></h3>
-              <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-              <div class="trainer d-flex justify-content-between align-items-center">
-                <div class="trainer-profile d-flex align-items-center">
-                  <img src="{% static 'assets/img/trainers/trainer-2.jpg' %}" class="img-fluid" alt="...">
-                  <span>Lana</span>
-                </div>
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-heart"></i>&nbsp;42
-                  &nbsp;&nbsp;
-                  <i class="bx bx-comment"></i>&nbsp;42
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> <!-- End Course Item-->
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-          <div class="course-item">
-              <img src="{% static 'assets/img/course-3.jpg' %}" class="img-fluid" alt="...">
-            <div class="course-content">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Content</h4>
-                <i class="bx bx-calendar">Jul 22, 2020 </i>
-              </div>
-
-              <h3><a href="course-details.html">Copywriting</a></h3>
-              <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-              <div class="trainer d-flex justify-content-between align-items-center">
-                <div class="trainer-profile d-flex align-items-center">
-                  <img src="{% static 'assets/img/trainers/trainer-3.jpg' %}" class="img-fluid" alt="...">
-                  <span>Brandon</span>
-                </div>
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-heart"></i>&nbsp;42
-                  &nbsp;&nbsp;
-                  <i class="bx bx-comment"></i>&nbsp;42
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> <!-- End Course Item-->
-
+        <!-- End Course Item-->
       </div>
-
     </div>
   </section><!-- End Popular Courses Section -->
   <nav aria-label="Page navigation example">
@@ -110,5 +33,22 @@
       </li>
     </ul>
   </nav>  
+
+  <script type="application/javascript">
+    // obtenemos el token
+    var token = "{{ csrf_token }}"
+  // Consumimos la Api (Todos los Post)
+  // get('/api-posts-all').then(result => {
+  //   for(p of result.data){
+  //     console.log(p.titulo)
+  //   }
+
+ 
+  // });
+
+  
+  </script>  
+  <!-- Llamamos a nuestro archivo Js  -->
+<script src="{% static '/blogJS/js/posts_all.js' %}" type="text/javascript"></script>
 {% endblock %} 
 

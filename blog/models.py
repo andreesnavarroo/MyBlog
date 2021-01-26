@@ -50,6 +50,15 @@ class Categoria(BaseModel):
     )
     historical = HistoricalRecords()
 
+    @property
+    def _history_user(self):
+        return self.changed_by
+
+    @_history_user.setter
+    def _history_user(self, value):
+        self.changed_by = value    
+            
+
     class Meta:
         verbose_name = 'Categoría'
         verbose_name_plural = 'Categorías'
@@ -79,6 +88,7 @@ class Post(BaseModel):
     imagen = models.ImageField(
         'imagen del post',
         upload_to='blog/images/', 
+        default = 'sinimagen.jpg',
         blank=True, 
         null=True
     )
@@ -87,6 +97,15 @@ class Post(BaseModel):
     fecha_desactiva = models.DateField('fecha desactiva post')
     publicado = models.BooleanField(help_text="Poner en True cuando el post este publicado", default=False)
     historical = HistoricalRecords()
+
+    @property
+    def _history_user(self):
+        return self.changed_by
+
+    @_history_user.setter
+    def _history_user(self, value):
+        self.changed_by = value
+
     class Meta:
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
@@ -94,7 +113,20 @@ class Post(BaseModel):
     def __str__(self):
         return "Id: {} | Titulo: {}".format(self.pk, self.titulo)     
 
+  
+    @property
+    def like_cantidad(self):
+        """
+            Se cuentan la cantidad de like por Post
+        """
+        return self.post_like.count()
 
+    @property
+    def comentarios_cantidad(self):
+        """
+            Se cuentan la cantidad de Comentarios por Post
+        """
+        return self.post_comentario.count()        
 
 # Modelo Likes
 class Like(BaseModel):
@@ -104,12 +136,20 @@ class Like(BaseModel):
     autor = models.ForeignKey(Autor, related_name = 'autor_like',
             on_delete = models.CASCADE, null=False, blank = False)            
     historical = HistoricalRecords()
+
+    @property
+    def _history_user(self):
+        return self.changed_by
+
+    @_history_user.setter
+    def _history_user(self, value):
+        self.changed_by = value    
+
     class Meta:
         verbose_name = 'Like'
         verbose_name_plural = 'Likes'
 
-    def __str__(self):
-        return self.estado
+
 
 # Modelo Comentarios
 class Comentario(BaseModel):
@@ -117,13 +157,18 @@ class Comentario(BaseModel):
             on_delete = models.CASCADE, null=False, blank = False)    
     autor = models.ForeignKey(Autor, related_name = 'autor_comentario',
             on_delete = models.CASCADE, null=False, blank = False)      
-    descripcion = models.CharField(
-        'Descipción del comentario',
-        max_length=500,
-        blank=False,
-        null=False
-    )
+    descripcion = models.TextField('Descripcion', null=False, blank = False)
             
+    historical = HistoricalRecords()
+
+    @property
+    def _history_user(self):
+        return self.changed_by
+
+    @_history_user.setter
+    def _history_user(self, value):
+        self.changed_by = value    
+                    
 
     class Meta:
         verbose_name = 'Comentario'

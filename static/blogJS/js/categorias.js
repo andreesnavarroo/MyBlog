@@ -45,7 +45,7 @@ this.tabla = $('#categorias-tabla').DataTable({
 }).columns.adjust();
 
 
-// Funcion Crear Categorias
+// Modal Crear Categorias
 function modalCreate() {
     id=null
     document.getElementById('nombre').value= ""
@@ -55,7 +55,7 @@ function modalCreate() {
     $("#ModalCreateOrUpdate").modal('show')
 }
 
-// Funcion para Editar Categorias
+//  Modal para Editar Categorias
 function modalUpdate(id){
     this.id= id
     // Removemos las clases
@@ -93,7 +93,7 @@ function validForm(){
         $('#statusSelect').removeClass("is-invalid")
         $('#statusSelect').addClass("is-valid")
     }
-
+    // si cunple las condiciones se llama crea o actualiza el objeto
     if($('#nombre').val() != ""  && $('#statusSelect').val() !=0){
         CrearOActualizar()
     }

@@ -1,107 +1,69 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
+{% block head %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{% static 'peticiones.js' %}" type="text/javascript"></script>
+{% endblock %}
 {% block hero %}
 {% endblock hero %}
-{% block body %}
+{% block conten %}
 <section id="popular-courses" class="courses">
     <div class="container" data-aos="fade-up">
         <!-- ======= Breadcrumbs ======= -->
         <div class="breadcrumbs" data-aos="fade-in">
           <div class="container">
-            <h2>Mis Blog</h2>
+            <h2>Mis Posts</h2>
             <p>Esta seccion podrás ver tus posts y crear nuevos. </p>
           </div>
         </div><!-- End Breadcrumbs -->
         <br>
         <div class="row ">
-          <a href="#"  data-toggle="modal" data-target="#exampleModal" class="get-started-btn">Nuevo</a>
+          <a onclick="modalCreate()" class="get-started-btn">Nuevo</a>
         </div>
-       
         <br>
+    
       <div class="row" data-aos="zoom-in" data-aos-delay="100">
-
+        {% for p in post %}
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
           <div class="course-item">
-              <img src="{% static 'assets/img/course-2.jpg' %}" class="img-fluid" alt="...">
+              {% if p.imagen %}
+              <img src="{{ p.imagen.url }}" class="img-fluid"   alt="...">
+              {% else %}
+              <img src="{% static 'assets/img/sinimagen.jpg' %}" class="img-fluid"   alt="...">
+              {% endif %}
             <div class="course-content">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Web Development</h4>
+                <h4>{{p.categoria}}</h4>
                 <i class="bx bx-calendar">Jul 22, 2020 </i>
               </div>
 
-              <h3><a href="course-details.html">Website Design</a></h3>
+              <h3><a href="course-details.html">{{p.titulo}}</a></h3>
               <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
               <div class="trainer d-flex justify-content-between align-items-center">
                 <div class="trainer-profile d-flex align-items-center">
-                  <img src="{% static 'assets/img/trainers/trainer-1.jpg' %}" class="img-fluid" alt="...">
-                  <span>Antonio</span>
+                  <img src="{{ p.autor.imagen.url }}" class="img-fluid" alt="...">
+                  <span>{{p.autor}}</span>
                 </div>
                 <div class="trainer-rank d-flex align-items-center">
                   <i class="bx bx-heart"></i>&nbsp;42
                   &nbsp;&nbsp;
                   <i class="bx bx-comment"></i>&nbsp;42
                 </div>
+               
               </div>
+              <div style="float: right;">
+              <a class="badge badge-warning text-white" > Editar</a>
+              <a class="badge badge-danger">Eliminar</a>
+            </div>
             </div>
           </div>
         </div> <!-- End Course Item-->
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-          <div class="course-item">
-            <img src="{% static 'assets/img/course-1.jpg' %}" class="img-fluid" alt="...">
-            <div class="course-content">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Marketing</h4>
-                <i class="bx bx-calendar">Jul 22, 2020 </i>
-              </div>
-
-              <h3><a href="course-details.html">Search Engine Optimization</a></h3>
-              <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-              <div class="trainer d-flex justify-content-between align-items-center">
-                <div class="trainer-profile d-flex align-items-center">
-                  <img src="{% static 'assets/img/trainers/trainer-2.jpg' %}" class="img-fluid" alt="...">
-                  <span>Lana</span>
-                </div>
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-heart"></i>&nbsp;42
-                  &nbsp;&nbsp;
-                  <i class="bx bx-comment"></i>&nbsp;42
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> <!-- End Course Item-->
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-          <div class="course-item">
-              <img src="{% static 'assets/img/course-3.jpg' %}" class="img-fluid" alt="...">
-            <div class="course-content">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4>Content</h4>
-                <i class="bx bx-calendar">Jul 22, 2020 </i>
-              </div>
-
-              <h3><a href="course-details.html">Copywriting</a></h3>
-              <p>Et architecto provident deleniti facere repellat nobis iste. Id facere quia quae dolores dolorem tempore.</p>
-              <div class="trainer d-flex justify-content-between align-items-center">
-                <div class="trainer-profile d-flex align-items-center">
-                  <img src="{% static 'assets/img/trainers/trainer-3.jpg' %}" class="img-fluid" alt="...">
-                  <span>Brandon</span>
-                </div>
-                <div class="trainer-rank d-flex align-items-center">
-                  <i class="bx bx-heart"></i>&nbsp;42
-                  &nbsp;&nbsp;
-                  <i class="bx bx-comment"></i>&nbsp;42
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> <!-- End Course Item-->
-
+       
+        {% endfor %}
+        <hr>
       </div>
-
+    
     </div>
   </section><!-- End Popular Courses Section -->
   <nav aria-label="Page navigation example">
@@ -117,26 +79,128 @@
       </li>
     </ul>
   </nav>  
-
   <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal fade bd-example-modal-lg" id="ModalCreateOrUpdate" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Crear Posts </h5>
+        <div class="header-modal2">
+            <h5 class="modal-title" id="titleModal" :text="title"></h5>
+            <span><i class="fas fa-info-circle"></i><small id="subtitle" :text="subtitle">
+        </div>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
         </button>
-      </div>
+    </div>
       <div class="modal-body">
-        ...
+        <form>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Titulo</label>
+                <input id="titulo" type="text" class="form-control" >
+                <div class="invalid-feedback">
+                  Por favor ingrese un titulo
+              </div>
+              </div>
+    
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="descripcion">Breve Descipción</label>
+                <input id="descripcion" type="text" class="form-control" >
+                <div class="invalid-feedback">
+                    Por favor ingrese una descripcion
+                  </div>
+              </div>
+            </div>  
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="categoria">Categoria</label>
+                <select id="categoria" class="custom-select">
+                  <option value=0 selected>Seleccione una categoria</option>
+                </select>
+                <div class="invalid-feedback">
+                    Por favor seleccione una opción
+                  </div>
+              </div>
+            </div>  
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Contenido</label>
+                <textarea class="form-control" id="contenido"></textarea>
+                <div class="invalid-feedback">
+                  Por favor ingrese un contenido
+              </div>
+              </div>
+    
+            </div>   
+          </div>
+          <div class="row">
+            <div  class="col-md-6">
+              <div class="form-group">
+                  <label for="inputState">Fecha Publicacion</label>
+                  <div class="input-group date" data-target-input="nearest">
+                      <input type="text" id="fecha_publ"
+                            class="form-control datetimepicker-input"
+                            data-target="#fecha_publ"/>
+                      <div class="input-group-append" data-target="#fecha_publ"
+                          data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          <div id="col_plazo_credito" class="col-md-6">
+            <div class="form-group">
+                <label for="inputState">Fecha Finalizacion</label>
+                <div class="input-group date" data-target-input="nearest">
+                    <input type="text" id="fecha_fin"
+                          class="form-control datetimepicker-input"
+                          data-target="#fecha_fin"/>
+                    <div class="input-group-append" data-target="#fecha_fin"
+                        data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+          </div> 
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                  <label for="exampleFormControlFile1">Imagen</label>
+                  <input type="file" name="files" class="form-control-file" id="imagen">
+                  <div class="invalid-feedback" style="width: 20px; height: 20px;">
+                      Por favor Elija imagen
+                  </div>
+              </div>
+            </div> 
+          </div>
+   
+      </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="validForm()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="{% static 'lib/moment-2.25.3/moment-with-locales.js' %}"></script>
+<script src="{% static 'lib/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js' %}"></script>
+<link href="{% static 'lib/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet"/>
+<script type="application/javascript">
+  // obtenemos el token
+  var token = "{{ csrf_token }}"
+  localStorage.setItem("token", JSON.stringify(token));
+
+</script>
+<!-- Llamamos a nuestro archivo Js  -->
+<script src="{% static '/blogJS/js/posts.js' %}" type="text/javascript"></script>
+
 {% endblock %} 
 
+{% block footer %}
+{% endblock footer %}

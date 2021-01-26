@@ -24,8 +24,9 @@ SECRET_KEY = '#96&j32wlb&lof0@vdt&nw3(hf0(aqq+)syg)g08pnc5q)+48n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
 AUTH_USER_MODEL = 'usuarios.User'
 
 # Application definition
@@ -81,6 +82,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Configuracion BD con postgresql
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql',
@@ -110,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-# Conf Rest Framework
+# Config Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -143,6 +145,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# Configuracion para archivos estaticos y archivos media
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [

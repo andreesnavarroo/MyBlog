@@ -45,65 +45,25 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center">
-
-      <h1 class="logo mr-auto"><a href="index.html">Blog</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-      <nav class="nav-menu d-none d-lg-block">
-        <ul>
-          <li class="active"><a href="index.html">Inicio</a></li>
-
-          <li class="drop-down"><a>Categorias</a>
-            <ul>
-              <li><a href="#">Marketing</a></li>
-              <li><a href="#">Web Develop</a></li>
-            </ul>
-          </li>
-          <li class="drop-down"><a>Tags</a>
-            <ul>
-              <li><a href="#">Marketing</a></li>
-              <li><a href="#">Web Develop</a></li>
-            </ul>
-          </li>
-          <li><a href="contact.html">Mis Posts</a></li>
-
-        </ul>
-      </nav><!-- .nav-menu -->
-      
-
-      <a href="courses.html" class="get-started-btn">Iniciar Sesion</a>
-
-    </div>
-  </header><!-- End Header -->
+  {% include 'header.html' %}
+  <!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
   {% block hero %}
   <section id="hero" class="d-flex justify-content-center align-items-center">
-    
     <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
-      <h1>Mantante al dia,<br>Tu Blog</h1>
+      <h1>Mantente al dia,<br>Tu Blog</h1>
       <h2>Noticias e información techie en un solo lugar
       </h2>
-      
     </div>
- 
   </section><!-- End Hero -->
-
   {% endblock hero %} 
-
 
   <main id="main">
       
-    {% block body %}
+    {% block conten %}
 
     {% endblock %} 
-
-    <!-- ======= Popular Courses Section ======= -->
-
-
 
   </main><!-- End #main -->
   {% block footer%}
@@ -160,22 +120,14 @@
 
       <div class="mr-md-auto text-center text-md-left">
         <div class="copyright">
-          &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
+           Copyright &copy; 2021 All rights reserved  <strong><span>Andres Navaro</span></strong> 
         </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
+
       </div>
       <div class="social-links text-center text-md-right pt-3 pt-md-0">
         <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
         <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+        <a href="https://www.linkedin.com/in/andres-navarro-31b75b164/" target="_blank" class="linkedin"><i class="bx bxl-linkedin"></i></a>
       </div>
     </div>
   </footer><!-- End Footer -->
@@ -185,7 +137,7 @@
 
   <!-- Vendor JS Files -->
 
-  
+  <script src="//code.jquery.com/jquery-1.12.4.js"></script>
   <script src=" {% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src=" {% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
   <script src=" {% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
