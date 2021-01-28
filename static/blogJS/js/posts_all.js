@@ -1,7 +1,5 @@
-var token = JSON.parse(localStorage.getItem("token"));
 
-
-// OBTENER HABITACIONES DISPONIBLES
+// Obtener todos los posts (PAGINA DE INICIO)
 get('/api-posts-all').then(result => {
     var jsonData = JSON.stringify(result.data);
       $.each(JSON.parse(jsonData), function (id, obj) {

@@ -19,8 +19,8 @@ class BaseModel(models.Model):
         help_text='Fecha y hora en la que se creó el objeto.'
     )
     fecha_modificacion = models.DateTimeField(
-        auto_now=True,
         null=True,
+        blank=True,
         help_text='Fecha y hora en la que se modificó por última vez el objeto.'
     )
 

@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 import requests
 # Modelos
-from blog.models import (Autor,Post )
+from blog.models import (Autor,Post,Comentario, )
 # Todos los blogs inicio
 def posts(request):
 	context = admin.site.each_context(request)
@@ -26,7 +26,6 @@ def mis_posts(request):
 	data = {
 		'post': post
 	}
-	print(data)
 	context = admin.site.each_context(request)
 	context.update({'titulo': 'Mis posts',})
 	return render(request,'mis_posts.html',  data)	
@@ -42,6 +41,8 @@ def categorias(request):
 # Detalle Post
 def detalle_post(request, pk):
 	post = Post.objects.get(pk=pk)
+	comentario = Comentario.objects.filter(post=post).order_by('-fecha_creacion')
+	autor = Autor.objects.filter(pk=request.user.id).first()
 	context = admin.site.each_context(request)
-	context.update({'titulo': 'Detalle Post','post': post})
+	context.update({'titulo': 'Detalle Post','post': post, 'comentario': comentario, 'autor':autor})
 	return render(request,'detalle_post.html', context)			

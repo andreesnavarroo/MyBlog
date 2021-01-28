@@ -1,5 +1,5 @@
 from django.contrib import admin
-from blog.models import Post, Like
+from blog.models import Post, Like, Comentario
 
 class Posts(admin.ModelAdmin):
     list_filter = ('estado',)
@@ -17,5 +17,14 @@ class Likes(admin.ModelAdmin):
     class Meta:
         model = Like        
 
+class Comentarios(admin.ModelAdmin):
+    list_filter = ('estado',)
+    search_fields = ('id', 'estado')
+    list_display = ('autor', 'post','descripcion')
+    
+    class Meta:
+        model = Comentario        
+
 admin.site.register(Post, Posts)
 admin.site.register(Like, Likes)
+admin.site.register(Comentario, Comentarios)

@@ -10,6 +10,43 @@ $('#fecha_fin').datetimepicker({
     format: 'YYYY-MM-DD',
     locale: 'es',
 });
+// Obtenemos los posts de el usuario actual y los listados en esta cards
+get('/api-posts').then(result => {
+    var jsonData = JSON.stringify(result.data);
+      $.each(JSON.parse(jsonData), function (id, obj) {
+             $("#card_mis_post").append(
+                "<div class='col-lg-4 col-md-6 d-flex align-items-stretch'>"+
+                "<div class='course-item'>"+
+                    "<img  src='"+obj.imagen+"' class='img-fluid' alt='...'>"+
+                  "<div class='course-content'>"+
+                    "<div class='d-flex justify-content-between align-items-center mb-3'>"+
+                      "<h4>"+obj.categoria.nombre+"</h4>"+
+                      "<i class='bx bx-calendar'>" +obj.fecha_publicacion+"</i>"+
+                    "</div>"+
+                    "<h3><a href='/detalle_post/"+obj.id+"'>"+obj.titulo+"</a></h3>"+
+                    "<p >"+obj.descripcion+"</p>"+
+                    "<div class='trainer d-flex justify-content-between align-items-center'>"+
+                      "<div class='trainer-profile d-flex align-items-center'>"+
+                        "<img src='"+obj.autor.imagen+"' class='img-fluid' alt='...'>"+
+                        "<span>"+obj.autor.username+"</span>"+
+                      "</div>"+
+                      "<div class='trainer-rank d-flex align-items-center'>"+
+                        "<i class='bx bx-heart'></i>&nbsp;"+obj.cantidad_like+""+
+                        "&nbsp;&nbsp;"+
+                        "<i class='bx bx-comment'></i>&nbsp;"+obj.cantidad_comentarios+""+
+                      "</div>"+
+                    "</div>"+
+                    "<div style='float: right;'>"+
+                    "<a class='badge badge-warning text-white'> Editar</a>"+
+                    "<a class='badge badge-danger'>Eliminar</a>"+
+                  "</div>"+                 
+                  "</div>"+
+                "</div>"+
+              "</div> "
+              
+        )
+      });
+  });
 
 
 // Consumimos la api y insertamos los datos en las opciones de los Selects
@@ -36,6 +73,26 @@ function modalCreate() {
     $("#ModalCreateOrUpdate").modal('show')
 }
 
+function modalUpdate(id) {
+    get('/api-posts/' + id).then(result => {
+        var objeto = result.data
+        console.log(objeto)
+        document.getElementById("cantidad").disabled = true;
+        document.getElementById('codigo').value = objeto.codigo
+        document.getElementById('nombre').value = objeto.nombre
+        document.getElementById('categoria').value = objeto.categoria.id
+        document.getElementById('marca').value = objeto.marca ? objeto.marca.id : '0';
+        document.getElementById('presentacion').value = objeto.presentacion ? objeto.presentacion.id : '0';
+        document.getElementById('impuesto').value = objeto.impuesto ? objeto.impuesto.id : '0';
+        document.getElementById('precio_compra').value = objeto.precio_compra
+        document.getElementById('precio_venta').value = objeto.precio_venta
+        document.getElementById('cantidad').value = objeto.cantidad
+        document.getElementById('statusSelect').value = objeto.estado
+        document.getElementById('titleModal').innerText = 'Actualizar Producto';
+        document.getElementById('subtitle').innerText = ' En esta sección puedes Actualizar Productos';
+        $("#ModalCreateOrUpdate").modal('show');
+    })
+}
 
 // Funcion para  crear o actualizar el registro
 function CrearOActualizar() {
@@ -56,7 +113,13 @@ function CrearOActualizar() {
             //location.href = '/mis_posts'
             $("#ModalCreateOrUpdate").modal('hide')
         });
-    } 
+    } else {
+        // Actualizar
+        put('/api-posts/' + id + '/', data, token).then(result => {
+            $("#ModalCreateOrUpdate").modal('hide')
+            id = null
+        })
+    }
 
 }
 
@@ -106,8 +169,6 @@ function validForm() {
         $('#fecha_fin').removeClass("is-invalid")
         $('#fecha_fin').addClass("is-valid")
     }
-
-
     if ($('#titulo').val() != ""  && $('#categoria').val() != 0 && $('#descripcion').val() != "" && $('#contenido').val() != "" && $('#fecha_publ').val() != "" && $('#fecha_fin').val() >= "") {
         CrearOActualizar()
     }

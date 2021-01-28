@@ -11,7 +11,11 @@ urlpatterns = [
     path('api-posts/', views.ViewPost.as_view()),
     path('api-posts-all/', views.ViewPostAll.as_view()),
     path('api-posts/<int:pk>/', views.PostDetalleView.as_view()),	
-    path('api-like-posts/', views.CreateBorrarLike.as_view()),	
+    path('api-like-posts/', views.CreateBorrarLike.as_view()),
 
+    # Urls Crear Comentarios (recibe id del post)
+    path('api-comentario/<int:pk>/', views.ViewComentario.as_view()),    	
+    # Editar comentario Tambn eliminar
+    path('api-comentario/editar/<int:pk>/', views.ComentarioDetalleView.as_view()),	
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
