@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_serializer',
     'django_filters',
+    'django_extensions',
     
     'blog',
     'usuarios',
+    'scripts',
 
 ]
 

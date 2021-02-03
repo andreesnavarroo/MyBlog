@@ -1,7 +1,22 @@
 
 # Blog
+```bash
+# Introduccion
+Cuenta con Login y registro de usuarios
+En Este Blog se pueden publicar posts Y filtrar por titulo y autor+
+los posts tienen categorias y tags
+se manejan 2 tipos de usuarios (ADMINISTRADOR Y USUARIO)
+* ADMINISTRADOR:
+tiene todos los permisos, y solo ellos pueden modificar y eliminar posts de otro usuarios
+* USUARIO:
+Tienes permisos para crear y modificar sus propios posts
+pueden dar like y quitar like
+* Usuario no autenticado solo puede ver los posts, no puede crear ni comentar ni dar like
 
 
+
+
+```
 
 ### Dependencia 📋
 ```
@@ -43,9 +58,16 @@ DATABASES = {
 python manage.py makemigrations
 python manage.py migrate
 ```
+##  Ejecutar script para configuracion incial🚀
+```
+Creacion de grupos, categorias y usuario administrador para acceder al sistema
+- python manage.py runscript script_inicial
+- Luego acceder al sistema utilice estas credenciales
+usuario: admin
+contraseña: admin12345
 
-
-##  Delpliegue 🚀
+```
+##  Despliegue 🚀
 
 ```
 Python manage.py runserver 

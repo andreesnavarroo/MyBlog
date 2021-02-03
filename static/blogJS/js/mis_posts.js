@@ -18,7 +18,6 @@ $('#fecha_fin').datetimepicker({
 // });
 // Obtenemos los posts de el usuario actual y los listados en esta cards
 get('/api-posts').then(result => {
-    console.log()
     if (result.data.length == 0){
         $("#card_mis_post").append(
             "<p style='background-color: #d43c3c; color:white'>"+'No se han encontrado posts, porfavor crear '+"</p>"
