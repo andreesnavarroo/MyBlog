@@ -17,6 +17,7 @@ from rest_framework import filters
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import  Q
+from django.contrib.auth.models import Group
 # Modelos
 from blog.models import (Categoria,Post, Like, Comentario)
 from usuarios.models import Autor
@@ -410,6 +411,10 @@ class UsuarioRegisterView(generics.ListCreateAPIView):
     queryset = Autor.objects.filter(deleted_at=None)
     serializer_class = RegisterUsuarioSerializer
     http_method_names = ['post']
+    """
+        Aqui se crean los usuarios q se registrar por 
+        el formulario de registro
+    """
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -417,8 +422,14 @@ class UsuarioRegisterView(generics.ListCreateAPIView):
             data = {'data': serializer.errors}
             return Response(data, status=409)
         instance = serializer.save(tipo_usuario='USUARIO', is_active=True, status=True)
+        # Encriptramos la contraseña
         instance.set_password(request.data['password'])
+        # Guardamos
         instance.save()
+        # Buscamos el grupo
+        group = Group.objects.get(name='USUARIO')
+        # Asignamos el grupo
+        group.user_set.add(instance)
         headers = self.get_success_headers(serializer.data)
         data = {'message':'Usuario Creado','data': serializer.data}
         return Response(data, status=200, headers=headers)

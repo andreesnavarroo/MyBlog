@@ -5,8 +5,14 @@
 
 // Funcion listar recibre como parametro la url
 function listar(url){
+  eliminar()
   get(url).then(result => {
-    eliminar()
+    if (result.data.length == 0){
+      $("#card_post").append(
+          "<p style='background-color: #d43c3c; color:white'>"+'No se han encontrado posts! '+"</p>"
+      )
+  }else{    
+    
     var jsonData = JSON.stringify(result.data);
       $.each(JSON.parse(jsonData), function (id, obj) {
              $("#card_post").append(
@@ -35,11 +41,12 @@ function listar(url){
                       "</div>"+
                     "</div>"+
                   "</div>"+
-                "</div>"+
-              "</div> "
+                "</div>"
+             
               
         )
       });
+    }
   });
 }
   // si se le da click en buscar, trae la ruta con los parametros de la busqueda
