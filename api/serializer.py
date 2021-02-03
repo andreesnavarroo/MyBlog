@@ -1,7 +1,11 @@
 from rest_framework import serializers
+from django.contrib.auth import password_validation
 
 from blog.models import Categoria, Post, Like, Comentario
 from usuarios.models import Autor
+
+from taggit_serializer.serializers import (TagListSerializerField,
+                                           TaggitSerializer)
 
 # Serializer Autor
 class SerializerAutor(serializers.ModelSerializer):
@@ -11,6 +15,20 @@ class SerializerAutor(serializers.ModelSerializer):
         fields = (
             'id', 'imagen', 'username' ,'tipo_usuario', 'nombre', 'apellidos', 'status', 'is_active',
              'groups')
+
+
+# Crear Usuario Register
+class RegisterUsuarioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Autor
+        write_only_fields = ('password',)
+        fields = (
+            'id', 'imagen','username','tipo_usuario', 'nombre','apellidos',
+             'status','is_active',
+            )
+
+
 
 # Serializer Categoria
 class SerializerCategoria(serializers.ModelSerializer):
@@ -34,8 +52,10 @@ class SerializerComentario(serializers.ModelSerializer):
 
 
 
+
+
 # Serializer Post
-class SerializerPost(serializers.ModelSerializer):
+class SerializerPost(TaggitSerializer ,serializers.ModelSerializer):
     # Likes del post
     like_post = serializers.SerializerMethodField('get_like_post')
 
@@ -47,22 +67,19 @@ class SerializerPost(serializers.ModelSerializer):
     cantidad_comentarios = serializers.ReadOnlyField(source='comentarios_cantidad')
     
     # Serializer realaciones 
-    categoria = SerializerCategoria(read_only=True)
-    categoriaID = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Categoria.objects.all(),
-                                                         source='categoria' )
     autor = SerializerAutor(read_only=True)
-
+    # Tags
+    tags = TagListSerializerField()
     class Meta:
         read_only_fields = ['autor']
         model = Post
-        fields = ('id','titulo','imagen', 'contenido', 'descripcion', 'fecha_publicacion', 'fecha_desactiva', 'publicado','cantidad_like','cantidad_comentarios','autor','categoria','categoriaID', 'like_post','comentarios_post')        
-
+        fields = ('id','categorias','titulo','imagen', 'tags',  'contenido', 'descripcion', 'fecha_publicacion', 'fecha_desactiva', 'cantidad_like','cantidad_comentarios','autor', 'like_post','comentarios_post')        
+        depth = 1
+        extra_kwargs = {"tags": {"required": False, "allow_null": True}}
     # Obtenemos los likes pertenecientes a cada post 
     def get_like_post(self, obj):
         objetos = Like.objects.filter(post=obj.id).order_by('id')
         return SerializerLike(objetos, many=True, read_only=True).data
-
-
     # Obtenemos los Comentarios a cada post 
     def get_comentarios_post(self, obj):
         objetos = Comentario.objects.filter(post=obj.id).order_by('id')

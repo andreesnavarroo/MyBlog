@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Blog | Inicio de sesion</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<!--===============================================================================================-->
+	<link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+	<link href="{% static 'assets/css/util.css' %}" rel="stylesheet">
+<!--===============================================================================================-->
+
+</head>
+
+<body>
+	<div class="container-login100" >
+		<div style="text-align: center;" class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
+		
+            <form enctype="multipart/form-data" id="FormLogin"	>		
+				<div class="wrap-input100 validate-input m-b-20">
+                    <input type="file" name="imagen" class="form-control-file" id="imagen">
+					<span class="focus-input100"></span>
+                </div>
+				<div class="wrap-input100 validate-input m-b-20">
+					<input type="text" name="nombre"   id="nombres" class="input100" placeholder="Nombre" autocomplete="off" data-validate="Ingrese su usuario">
+					<span class="focus-input100"></span>
+                </div>
+				
+				<div class="wrap-input100 validate-input m-b-20">
+					<input type="text"  name="apellidos"  id="apellidos" class="input100" placeholder="Apellidos" autocomplete="off" data-validate="Ingrese su usuario">
+					<span class="focus-input100"></span>
+                </div>
+                				
+				<div class="wrap-input100 validate-input m-b-20">
+					<input type="text" name="username" id="username" class="input100" placeholder="Nombre de usuario" autocomplete="off" data-validate="Ingrese su usuario">
+					<span class="focus-input100"></span>
+                </div>
+                				
+				<div class="wrap-input100 validate-input m-b-20">
+					<input type="password"  name="password" id="password" class="input100" placeholder="Contraseña"  data-validate="Ingrese su usuario">
+					<span class="focus-input100"></span>
+				</div>                
+				<div class="wrap-input100 validate-input m-b-25">
+					<input type="password" name="password2" id="password2" class="input100"  placeholder="Confirmar Contraseña"  data-validate = "Ingrese su contraseña">
+					<span class="focus-input100"></span>
+                </div>
+                <div class="row">
+                    <div class="container-login100-form-btn" >
+                        <button   class="login100-form-btn login">
+                            Registrarse
+                        </button>
+                
+                    </div>
+                </div>
+	
+             <br>  <div class="row">
+                    <a href="{% url 'login' %}" class="txt2">
+                        Volver al Login
+                        </a>
+                    </div>
+                    <div class="row">
+                        <a href="{% url 'posts' %}" class="txt2">
+                            Inicio
+                            </a>
+                        </div>                    
+            </form>	
+		</div>
+	</div>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+
+
+    
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{% static 'peticiones.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        function validate(){
+        var passw = $('#password').val()
+        var passw2 = $('#password2').val()
+        var username =$('#username').val()
+        var nombre =$('#nombres').val()
+        var ape = $('#apellidos').val()
+        var bandera = false
+
+        if (passw.length < 8){
+            bandera = true
+            Toast.fire({
+                icon: 'error',
+                title: "La contraseña debe ser minimo de 8 caracteres"
+            })
+        }
+        if (passw != passw2){
+            bandera = true
+            Toast.fire({
+                icon: 'error',
+                title: "Contraseñas no coinciden"
+            })
+        }        
+        if (username.length <3){
+            bandera = true
+            Toast.fire({
+                icon: 'error',
+                title: "El nombre de usuario debe ser minimo de 3 caracteres"
+            })
+        }
+        if(nombre.length<3){
+            bandera=true
+            Toast.fire({
+                icon: 'error',
+                title: "El nombre debe ser minimo de 3 caracteres"
+            })
+        }
+        if(ape.length<3){
+            bandera=true
+            Toast.fire({
+                icon: 'error',
+                title: "El apellido debe ser minimo de 3 caracteres"
+            })
+        }
+        return bandera;
+    }
+    // Botenemos la data del form y Enviamos la data 
+    $(function(){
+        $("#FormLogin").on("submit", function(e){
+            e.preventDefault();
+            if (validate()==false){
+                var f = $(this);
+                var data = new FormData(document.getElementById("FormLogin"));
+                post1('/api-register-usuario/', data ).then(result=>{
+                    $("#FormLogin")[0].reset();
+                    console.log(result.data)
+                }).catch(function (error) {
+                    console.log(error)
+                })                
+            }
+
+        });
+    });
+    </script>
+</body>
+</html>

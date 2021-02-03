@@ -1,8 +1,11 @@
 from django.db import models
+
 # Lib seguimiento de los cambios en los modelos
 from simple_history.models import HistoricalRecords
 
 from usuarios.models import Autor
+
+from taggit.managers import TaggableManager
 
 class BaseModel(models.Model):
     """ BaseModel Funciona como una clase base abstracta
@@ -66,12 +69,14 @@ class Categoria(BaseModel):
     def __str__(self):
         return self.nombre
 
+class Tag(BaseModel):
+    name = models.CharField(max_length=255)
 
 # Modelo Post
 class Post(BaseModel):    
     autor = models.ForeignKey(Autor, related_name = 'autor_post',
             on_delete = models.CASCADE, null=False, blank = False)      
-    categoria = models.ForeignKey(Categoria, on_delete = models.CASCADE, related_name="categoria_post")
+    categorias = models.ManyToManyField(Categoria, related_name = 'categoria_post')
     titulo = models.CharField(
         'Titulo del post',
         unique=True,
@@ -95,7 +100,7 @@ class Post(BaseModel):
     contenido = models.TextField('Contenido')
     fecha_publicacion = models.DateField('fecha publicacion del post')
     fecha_desactiva = models.DateField('fecha desactiva post')
-    publicado = models.BooleanField(help_text="Poner en True cuando el post este publicado", default=False)
+    tags = TaggableManager()
     historical = HistoricalRecords()
 
     @property

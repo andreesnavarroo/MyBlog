@@ -2,13 +2,13 @@
 
 <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
-      <h1 class="logo mr-auto"><a href="index.html">Blog</a></h1>
+      <h1 class="logo mr-auto"><a href="{% url 'posts' %}">Blog</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
       <nav class="nav-menu d-none d-lg-block">
         <ul>
-          <li class="active"><a href="{% url 'posts' %}">Inicio</a></li>
-          <li class="drop-down"><a>Categorias</a>
+          <li    {% if request.path == '/posts' %} class="active" {% else %} class="" {% endif %} > <a href="{% url 'posts' %}">Inicio</a></li>
+          <!-- <li class="drop-down"><a>Categorias</a>
             <ul>
               <li><a href="#">Marketing</a></li>
               <li><a href="#">Web Develop</a></li>
@@ -19,16 +19,16 @@
               <li><a href="#">Marketing</a></li>
               <li><a href="#">Web Develop</a></li>
             </ul>
-          </li>
+          </li> -->
           
           {% if user.is_authenticated %}
-          <li class="drop-down"><a>Opciones</a>
+          <li {% if request.path == '/mis_posts'  or request.path == '/categorias' %} class="active drop-down" {% else %} class="drop-down" {% endif %}><a>Opciones</a>
             <ul>
                 {% if user.tipo_usuario == 'ADMINISTRADOR' %} 
-                    <li><a href="{% url 'categorias' %}">Listado Categorias</a></li>
+                    <li {% if request.path == '/categorias' %} class="active" {% else %} class="" {% endif %}><a href="{% url 'categorias' %}">Listado Categorias</a></li>
                 {% endif %}
                 {% if user.tipo_usuario == 'ADMINISTRADOR' or user.tipo_usuario == 'USUARIO' %} 
-              <li><a href="{% url 'mis_posts' %}">Mis Posts</a></li>
+              <li {% if request.path == '/mis_posts' %} class="active" {% else %} class="" {% endif %}><a href="{% url 'mis_posts' %}">Posts</a></li>
               {% endif %}
             </ul>
           </li>
@@ -40,14 +40,14 @@
       </nav><!-- .nav-menu -->
       {% if user.is_anonymous %}
       <a href="{% url 'login' %}" class="get-started-btn">Iniciar Sesion</a>
-      <a href="#" class="get-started-btn">Registrarse</a>
+      <a href="{% url 'register' %}" class="get-started-btn">Registrarse</a>
       {% else %}
       <a href="{% url 'logout' %}" class="get-started-btn">Cerrar Sesion</a>
       {% endif %}
-      <form class="form-inline">
+      <!-- <form class="form-inline">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
+      </form> -->
     </div>
   </header>
 

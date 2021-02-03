@@ -28,6 +28,7 @@ this.tabla = $('#categorias-tabla').DataTable({
     "data":"id",
     "render": function(data,type,full,meta){
         var buttons = '<a onclick="modalUpdate('+data+')"  class="bx bx-edit bx-sm"></a> ';
+        buttons += '<a data-del="'+data+'"  class="del bx bx-trash bx-sm" style="color:red !important" ></a> ';
         return buttons;
     }
   },{"targets":2,
@@ -121,3 +122,39 @@ function CrearOActualizar(){
         })
     }
 }
+
+//funcion eliminar escucha los eventos en el boton eliminar
+$('#categorias-tabla').on( 'click', '.del', function (event) {
+    id = this.getAttribute("data-del");
+    Swal.fire({
+        title: '¿Estas seguro que deseas eliminar esta categoria?',
+        text: "¡Eliminar Categoria!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3AC162',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Eliminar!'
+    }).then((result) => {
+        if (result.value) {
+            deleted('/api-categorias/'+ id, token).then(result => {
+                Swal.fire(
+                    '¡Eliminado!',
+                    'El registro fue eleminado correctamente.',
+                    'success'
+                )
+                tabla.ajax.reload()
+            }).catch(function (error) {
+                console.log(error)
+                Swal.fire(
+                    '¡Error!',
+                    'Este registro no se pudo eliminar, consulte con el administrador',
+                    'warning'
+                )
+            })
+
+        }else{
+            console.log("no entra")
+        }
+    })
+    
+   });

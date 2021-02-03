@@ -19,7 +19,7 @@ const Toast = Swal.mixin({
 async function get(url) {
     return await axios.get(url).then(result => {
         if(result.code ==! 1){
-            console.log(result.message)
+            // console.log(result.message)
         }else{
             return result.data
         }
@@ -150,5 +150,40 @@ async function deleted(url, csrf_token){
             icon: 'error',
             title: String(err)
         })
+    })
+}
+
+
+
+// recibimos la URl, la data y token
+async function post1(url, data, ){
+    return  await axios.post(url, data, {headers: {'Content-Type': 'application/json'}}).then(result => {
+        if(result.data.code == 2){
+            Toast.fire({
+                icon: 'warning',
+                title: String(result.data.message)
+            })
+            return result
+        }else if(result.data.code ==! 1){
+            Toast.fire({
+                icon: 'warning',
+                title: "Ha ocurrido un error contacte con el administrador"
+            })
+            return result
+        }else{
+            Toast.fire({
+                icon: 'success',
+                title:  String(result.data.message)
+            })
+            // title: "Regitro Exitoso!"
+            return result.data
+        }
+    }).catch((err) => {
+        console.log(err)
+        Toast.fire({
+            icon: 'error',
+            title: String(err)
+        })
+        
     })
 }

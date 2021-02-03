@@ -3,6 +3,7 @@
 # Utilidades
 from __future__ import unicode_literals
 import sys
+from datetime import date
 
 # Django REST framework
 from rest_framework.permissions import IsAuthenticated
@@ -10,15 +11,17 @@ from rest_framework import generics, status
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 # Django
 from django.utils import timezone
 from django.db import transaction
-
+from django.db.models import  Q
 # Modelos
 from blog.models import (Categoria,Post, Like, Comentario)
 from usuarios.models import Autor
 # Serializers
-from .serializer import (SerializerCategoria, SerializerPost, SerializerLike, SerializerComentario)
+from .serializer import (SerializerCategoria, SerializerPost, SerializerLike, SerializerComentario, RegisterUsuarioSerializer)
 
 # Filtros 
 from .query import filtro_categoria
@@ -70,25 +73,15 @@ class ViewCategoria(generics.ListCreateAPIView):
         if serializer.is_valid(): 
             # perform_create llama a serializer.save() 
             self.perform_create(serializer)
-            return Response({'message': 'Categoria guardada con éxito', 'code': 1, 'data': serializer.data}, status=status.HTTP_201_CREATED,)
-        return Response({'message': serializer.errors, 'code': 5, 'data': None}, status=status.HTTP_400_BAD_REQUEST, )
-
-        # serializer = self.get_serializer(data=request.data)
-        # if not serializer.is_valid(raise_exception=False):
-        #     data = {'message': serializer.errors, 'code': 5, 'data': None}
-        #     return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
-        # self.perform_create(serializer)
-        # headers = self.get_success_headers(serializer.data)
-        # data = {'message': 'Categoria guardada con éxito', 'code': 1, 'data': serializer.data}
-        # return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+            return Response({'data': serializer.data}, status=status.HTTP_201_CREATED,)
+        return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST, )
 
 
 # Vista  Detalle Categoria
-class CategoriaDetalleView(generics.RetrieveUpdateAPIView):
+class CategoriaDetalleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Categoria.objects.all()
     serializer_class = SerializerCategoria
-    http_method_names = ['get', 'put']
+    http_method_names = ['get', 'put','delete']
     permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, pk):
@@ -96,10 +89,10 @@ class CategoriaDetalleView(generics.RetrieveUpdateAPIView):
             queryset = Categoria.objects.get(pk=pk)
             serializer = SerializerCategoria(queryset)
             if serializer:
-                data = {'message': 'detalle de categorias', 'code': 1, 'data': serializer.data}
+                data = {'data': serializer.data}
                 return Response(data, status=status.HTTP_200_OK)
             else:
-                data = {'message': 'detalle de categorias', 'code': 1, 'data': None}
+                data = {'data': None}
                 return Response(data, status=status.HTTP_200_OK)
         except Exception:
             e = sys.exc_info()[1]
@@ -112,17 +105,29 @@ class CategoriaDetalleView(generics.RetrieveUpdateAPIView):
             request.data['updated_at'] = timezone.now()
             serializer = self.serializer_class(instance, data=request.data, partial=True)
             if not serializer.is_valid(raise_exception=False):
-                data = {'message': serializer.errors, 'code': 5, 'data': None}
+                data = {'data': serializer.errors}
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
-            data = {'message': 'Categoria actualizada con éxito', 'code': 1, 'data': serializer.data}
+            data = {'data': serializer.data}
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
             data = {'message': e.args[0], 'code': 2, 'data': None}
             return Response(data, status=409)
+
+    def delete(self, request, pk):  
+        # Eliminamos categoria
+        try:           
+            instance = self.queryset.get(pk=pk)
+            instance.delete()
+            data = {'data': None}
+            return Response(data, status=200)
+        except Exception:
+            e = sys.exc_info()[1]
+            data = {'message': e.args[0], 'code': 2, 'data': None}
+            return Response(data, status=409)                      
                                        
-# Vista Post
+# Vista Post 
 class ViewPost(generics.ListCreateAPIView):
     queryset = Post.objects.filter(fecha_eliminacion=None)
     http_method_names = ['get', 'post']
@@ -136,80 +141,82 @@ class ViewPost(generics.ListCreateAPIView):
         """
         autor = Autor.objects.get(pk=request.user.id)
         if autor.tipo_usuario == 'ADMINISTRADOR':
-            query = Post.objects.all()
+            query = Post.objects.all().order_by('-fecha_creacion')
         else:
-            query = Post.objects.filter(autor=autor)    
+            query = Post.objects.filter(autor=autor).order_by('-fecha_creacion')    
         queryset = self.filter_queryset(query)
         serializer = SerializerPost(queryset, many=True, context={'request': request})
         if serializer:
-            return Response({'code': 1,
-                             'message': 'Posts',
-                             'data': serializer.data, },
-                            status=200)
+            return Response({'data': serializer.data, },status=200)
         else:
-            return Response({'code': 1,
-                             'message': 'Posts',
-                             'data': None, },
-                            status=200)
+            return Response({'data': None,},status=200)
 
     def create(self, request, *args, **kwargs):
         """
-            Creamos el Post, Validamos si el Serializer 
-            contiene errores, sino creamos el objeto
         """
-        # Serializamos 
+        print('1',request.data)   
+        request.data._mutable = True
+        request.data['tags'] = list(request.data['tags'].split(",")) 
+        request.data['categorias'] = list(request.data['categorias'].split(",")) 
+        request.data._mutable = False
         serializer = self.get_serializer(data=request.data)
-        # Si serializer el valido
-        if serializer.is_valid(): 
+        print('2',request.data)   
+        if not serializer.is_valid(raise_exception=False):
+            raise Exception(serializer.errors)        
             # Buscamos el autor para usarlo al guardar el post
-            autor = Autor.objects.get(pk=request.user.id)
+        autor = Autor.objects.get(pk=request.user.id)
             # Guardamos el post con el autor(usuario actual)
-            serializer.save(autor=autor) 
-            return Response({'message': 'Post guardado con éxito', 'code': 1, 'data': serializer.data}, status=status.HTTP_201_CREATED,)
-        return Response({'message': serializer.errors, 'code': 5, 'data': None}, status=status.HTTP_400_BAD_REQUEST,)
+        instance = serializer.save(autor=autor) 
 
-# Vista Post All
-class ViewPostAll(generics.ListCreateAPIView):
-    queryset = Post.objects.filter(fecha_eliminacion=None)
-    http_method_names = ['get', 'post']
+        if 'categorias' in request.data:
+            for categorias in request.data['categorias']:
+                cats = Categoria.objects.filter(pk=int(categorias))
+                cats = cats.first()
+                instance.categorias.add(cats)
+        serializer = SerializerPost(instance)
+        return Response({'data': serializer.data}, status=status.HTTP_201_CREATED,)
+        
+
+# Vista Post All (View para el Inicio)
+class ViewPostAll(generics.ListAPIView):
+    queryset = Post.objects.all()
     serializer_class = SerializerPost
-    
-    
+    filter_backends = [filters.SearchFilter]
+    # Usamos Filter de DRF y filtramos por estos campos
+    search_fields = ['titulo','autor__nombre',]
+
     def get(self, request):
         """
-            Listamos todos los Posts
+            Listamos todos los Posts, filtramos por las fechas de publicacion
         """
-        query = Post.objects.filter()
+        fecha_actual = date.today()
+        # buscador = self.request.GET.get('buscador')
+        query = Post.objects.filter(Q(fecha_publicacion__lte = fecha_actual,fecha_desactiva__gte = fecha_actual)).order_by('-fecha_creacion')
+        # if buscador:
+        #     query = Post.objects.filter(Q(fecha_publicacion__lte = fecha_actual,fecha_desactiva__gte = fecha_actual), titulo__contains=buscador) 
         queryset = self.filter_queryset(query)
         serializer = SerializerPost(queryset, many=True, context={'request': request})
         if serializer:
-            return Response({'code': 1,
-                             'message': 'Todos los Posts',
-                             'data': serializer.data, },
-                            status=200)
+            return Response({'data': serializer.data,},status=200)
         else:
-            return Response({'code': 1,
-                             'message': 'Todos los Posts',
-                             'data': None, },
-                            status=200)
+            return Response({'data': None,},status=200)
 
 # Vista  detalle Post
-class PostDetalleView(generics.RetrieveUpdateAPIView):
+class PostDetalleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = SerializerPost
-    http_method_names = ['get', 'put']
+    http_method_names = ['get', 'put','delete']
     permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, pk):
         try:
-            autor = Autor.objects.get(pk=request.user.id)
-            queryset = Post.objects.get(pk=pk, autor=autor)
+            queryset = Post.objects.get(pk=pk)       
             serializer = SerializerPost(queryset)
             if serializer:
-                data = {'message': 'detalle de posts', 'code': 1, 'data': serializer.data}
+                data = {'data': serializer.data}
                 return Response(data, status=status.HTTP_200_OK)
             else:
-                data = {'message': 'detalle de posts', 'code': 1, 'data': None}
+                data = {'data': None}
                 return Response(data, status=status.HTTP_200_OK)
         except Exception:
             e = sys.exc_info()[1]
@@ -218,20 +225,58 @@ class PostDetalleView(generics.RetrieveUpdateAPIView):
 
     def put(self, request, pk):
         try:
-            autor = Autor.objects.get(pk=request.user.id)
-            instance = self.queryset.get(pk=pk, autor=autor)
-            request.data['updated_at'] = timezone.now()
-            serializer = self.serializer_class(instance, data=request.data, partial=True)
-            if not serializer.is_valid(raise_exception=False):
-                data = {'message': serializer.errors, 'code': 5, 'data': None}
-                return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            serializer.save()
-            data = {'message': 'Posts actualizada con éxito', 'code': 1, 'data': serializer.data}
-            return Response(data, status=200)
+            tags = list(request.data['tags'].split(",")) 
+            # print(tags)
+            # print(request.data['tags'])
+            print(request.data)
+            categorias = list(request.data['categorias'].split(",")) 
+            post = Post.objects.filter(pk=pk).update(titulo=request.data['titulo'],
+                            contenido=request.data['contenido'],fecha_modificacion=timezone.now(), fecha_publicacion=request.data['fecha_publicacion'],
+                            fecha_desactiva=request.data['fecha_desactiva'],descripcion=request.data['descripcion'] )
+            print('post',post)     
+            # post.tags.add(tags)                       
+            # serializer = SerializerPost(post)
+            # if 'categorias' in request.data:
+            #         for categorias in request.data['categorias']:
+            #             cats = Categoria.objects.filter(pk=categorias)
+            #             cats = cats.first()
+            #             post.categorias.add(cats)
+            serializer = SerializerPost(post)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK,)            
+            
+        #     request.data._mutable = True
+        #     request.data._mutable = False    
+        #     print('2',request.data)        
+        #     instance = self.queryset.get(pk=pk)
+        #     request.data['updated_at'] = timezone.now()
+        #     serializer = self.serializer_class(instance, data=request.data)
+        #     # if not serializer.is_valid(raise_exception=False):
+        #     #     data = {'data': serializer.errors}
+        #     #     return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        #     instance = serializer.save(tags=tags,categorias=categorias)
+        #     if 'categorias' in request.data:
+        #         for categorias in request.data['categorias']:
+        #             cats = Categoria.objects.filter(pk=int(categorias))
+        #             cats = cats.first()
+        #             instance.categorias.add(cats)
+        #     serializer = SerializerPost(instance)
+        #     return Response({'data': serializer.data}, status=status.HTTP_200_OK,)
         except Exception:
             e = sys.exc_info()[1]
             data = {'message': e.args[0], 'code': 2, 'data': None}
             return Response(data, status=409)
+
+    def delete(self, request, pk):  
+        # Eliminamos el Post
+        try:           
+            instance = self.queryset.get(pk=pk)
+            instance.delete()
+            data = {'data': None}
+            return Response(data, status=200)
+        except Exception:
+            e = sys.exc_info()[1]
+            data = {'message': e.args[0], 'code': 2, 'data': None}
+            return Response(data, status=409)             
 
 # Vista Crear Comentario (recibe pk del post)
 class ViewComentario(generics.ListCreateAPIView):
@@ -255,9 +300,9 @@ class ViewComentario(generics.ListCreateAPIView):
                     post = Post.objects.get(pk=pk)
                     # Guardamos el comentario
                     serializer.save(autor=autor,post=post) 
-                    return Response({'message': 'Comentario agregado con éxito', 'code': 1, 'data': serializer.data}, status=status.HTTP_201_CREATED,)
-                return Response({'message': 'Para comentar Porfavor Iniciar Sesion', 'code': 2, 'data': None}, status=200,)    
-            return Response({'message': serializer.errors, 'code': 5, 'data': None}, status=status.HTTP_400_BAD_REQUEST,)
+                    return Response({'data': serializer.data}, status=status.HTTP_201_CREATED,)
+                return Response({'data': None}, status=200,)    
+            return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST,)
         except Exception:
             e = sys.exc_info()[1]
             data = {'message': e.args[0], 'code': 2, 'data': None}
@@ -265,7 +310,6 @@ class ViewComentario(generics.ListCreateAPIView):
 
 
 # Vista  Detalle Comentario
-
 class ComentarioDetalleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comentario.objects.all()
     serializer_class = SerializerComentario
@@ -277,10 +321,10 @@ class ComentarioDetalleView(generics.RetrieveUpdateDestroyAPIView):
             queryset = Comentario.objects.get(pk=pk)
             serializer = SerializerComentario(queryset)
             if serializer:
-                data = {'message': 'detalle de comentario', 'code': 1, 'data': serializer.data}
+                data = {'data': serializer.data}
                 return Response(data, status=status.HTTP_200_OK)
             else:
-                data = {'message': 'detalle de comentario', 'code': 1, 'data': None}
+                data = {'data': None}
                 return Response(data, status=status.HTTP_200_OK)
         except Exception:
             e = sys.exc_info()[1]
@@ -296,23 +340,22 @@ class ComentarioDetalleView(generics.RetrieveUpdateDestroyAPIView):
             request.data['updated_at'] = timezone.now()
             serializer = self.serializer_class(instance, data=request.data, partial=True)
             if not serializer.is_valid(raise_exception=False):
-                data = {'message': serializer.errors, 'code': 5, 'data': None}
+                data = {'data': serializer.errors}
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
-            data = {'message': 'Comentario actualizado con éxito', 'code': 1, 'data': serializer.data}
+            data = {'data': serializer.data}
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
             data = {'message': e.args[0], 'code': 2, 'data': None}
             return Response(data, status=409)
 
-    @transaction.atomic
     def delete(self, request, pk):  
         # Eliminamos el comentario
         try:           
             instance = self.queryset.get(pk=pk)
             instance.delete()
-            data = {'message': 'Registro Eliminado con éxito', 'code': 1, 'data': None}
+            data = {'data': None}
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
@@ -360,3 +403,24 @@ class CreateBorrarLike(APIView):
             return Response(data, status=409)
 
 
+
+
+# Vistra crear Usuario
+class UsuarioRegisterView(generics.ListCreateAPIView):
+    queryset = Autor.objects.filter(deleted_at=None)
+    serializer_class = RegisterUsuarioSerializer
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid(raise_exception=False):
+            data = {'data': serializer.errors}
+            return Response(data, status=409)
+        instance = serializer.save(tipo_usuario='USUARIO', is_active=True, status=True)
+        instance.set_password(request.data['password'])
+        instance.save()
+        headers = self.get_success_headers(serializer.data)
+        data = {'message':'Usuario Creado','data': serializer.data}
+        return Response(data, status=200, headers=headers)
+
+    

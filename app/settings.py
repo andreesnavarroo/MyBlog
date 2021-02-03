@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'rest_framework',
     'simple_history',
+    'taggit',
+    'taggit_serializer',
+    'django_filters',
     
     'blog',
     'usuarios',
@@ -115,6 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 # Config Rest Framework
 REST_FRAMEWORK = {
+
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
@@ -124,7 +128,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
-
 
 }
 

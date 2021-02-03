@@ -4,7 +4,7 @@ from blog.models import Post, Like, Comentario
 class Posts(admin.ModelAdmin):
     list_filter = ('estado',)
     search_fields = ('id', 'titulo')
-    list_display = ('autor', 'categoria', 'titulo')
+    list_display = ('autor', 'titulo')
     
     class Meta:
         model = Post

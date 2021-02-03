@@ -1,6 +1,12 @@
 
-// Obtener todos los posts (PAGINA DE INICIO)
-get('/api-posts-all').then(result => {
+  // Inicia con todos los datos
+  urlBusqueda = '/api-posts-all/'
+  listar(urlBusqueda)
+
+// Funcion listar recibre como parametro la url
+function listar(url){
+  get(url).then(result => {
+    eliminar()
     var jsonData = JSON.stringify(result.data);
       $.each(JSON.parse(jsonData), function (id, obj) {
              $("#card_post").append(
@@ -9,9 +15,12 @@ get('/api-posts-all').then(result => {
                     "<img  src='"+obj.imagen+"' class='img-fluid' alt='...'>"+
                   "<div class='course-content'>"+
                     "<div class='d-flex justify-content-between align-items-center mb-3'>"+
-                      "<h4>"+obj.categoria.nombre+"</h4>"+
+                    "<a>"+obj.categorias.map(e=> "<h4>"+e.nombre+"</h4>")+"</a>"+               
                       "<i class='bx bx-calendar'>" +obj.fecha_publicacion+"</i>"+
                     "</div>"+
+                    "<div class='d-flex justify-content-between align-items-center mb-3'>"+
+                    "<h4 style='background:darkgray; border-radius:41px'>"+obj.tags+"</h4>"+             
+                    "</div>"+                    
                     "<h3><a href='/detalle_post/"+obj.id+"'>"+obj.titulo+"</a></h3>"+
                     "<p >"+obj.descripcion+"</p>"+
                     "<div class='trainer d-flex justify-content-between align-items-center'>"+
@@ -32,4 +41,24 @@ get('/api-posts-all').then(result => {
         )
       });
   });
-  
+}
+  // si se le da click en buscar, trae la ruta con los parametros de la busqueda
+function Buscar(){
+    var busqueda = $("#buscador").val()
+    urlBusqueda = '/api-posts-all/?search='+busqueda
+    listar(urlBusqueda)
+    // window.location.reload(); 
+}
+// eliminar el contenido del div
+
+function eliminar(){
+  document.getElementById('card_post').innerHTML = ""
+}
+// valida q cuando el buscador este vacio traiga toda la info
+// se le pasa la ruta q trae todos los posts
+$("#buscador").on("keyup", function(){
+  if( $("#buscador").val().length <= 0) {
+    urlBusqueda = '/api-posts-all/'
+    listar(urlBusqueda);
+  }
+});

@@ -25,7 +25,7 @@ class User(AbstractUser):
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(default=True)
 
     historical = HistoricalRecords()
     USERNAME_FIELD = 'username'

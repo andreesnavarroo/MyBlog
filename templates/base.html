@@ -53,7 +53,7 @@
   <section id="hero" class="d-flex justify-content-center align-items-center">
     <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
       <h1>Mantente al dia,<br>Tu Blog</h1>
-      <h2>Noticias e información techie en un solo lugar
+      <h2>Noticias e información de tecnologia en un solo lugar
       </h2>
     </div>
   </section><!-- End Hero -->
@@ -73,51 +73,19 @@
     <div class="footer-top">
       <div class="container">
         <div class="row">
-
           <div class="col-lg-3 col-md-6 footer-contact">
             <h3>Blog</h3>
             <p>
               Andres Navarro <br>
               <br><br>
-              <strong>Phone:</strong> +57 3017860400<br>
-              <strong>Email:</strong> andreesnavarroo@example.com<br>
+              <strong>Telefono:</strong> +57 3017860400<br>
+              <strong>Correo:</strong> andreesnavarroo@gmail.com<br>
             </p>
           </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Navega</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Inicio</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Categorias</a></li>
- 
-            </ul>
-          </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Tags</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
         </div>
       </div>
     </div>
-
     <div class="container d-md-flex py-4">
-
       <div class="mr-md-auto text-center text-md-left">
         <div class="copyright">
            Copyright &copy; 2021 All rights reserved  <strong><span>Andres Navaro</span></strong> 
@@ -136,20 +104,24 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-
   <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+
   <script src=" {% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script src=" {% static 'assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
   <script src=" {% static 'assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
   <script src=" {% static 'assets/vendor/counterup/counterup.min.js' %}"></script>
   <script src=" {% static 'assets/vendor/owl.carousel/owl.carousel.min.js' %}"></script>
   <script src=" {% static 'assets/vendor/aos/aos.js' %}"></script>
+  <link href="{% static 'lib/select2-4.0.13/css/select2.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'lib/select2-4.0.13/css/select2-bootstrap4.min.css' %}" rel="stylesheet" />
+  <script src="{% static 'lib/select2-4.0.13/js/select2.min.js' %}"></script>
+  <script src="{% static 'lib/select2-4.0.13/js/i18n/es.js' %}"></script>
 
   <!-- Template Main JS File -->
   <script src=" {% static 'assets/js/main.js' %}"></script>
 
-  {% block javascript %}
-  {% endblock javascript %}
-</body>
 
+</body>
+{% block javascript %}
+{% endblock javascript %}
 </html>

@@ -42,7 +42,8 @@ parts/
 sdist/
 
 var/
-
+media/blog/
+media/autor/
 *.egg-info/
 
 .installed.cfg

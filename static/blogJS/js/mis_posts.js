@@ -10,8 +10,20 @@ $('#fecha_fin').datetimepicker({
     format: 'YYYY-MM-DD',
     locale: 'es',
 });
+// get('/api-posts').then(result => {
+//     var jsonData = JSON.stringify(result.data);
+//     $.each(JSON.parse(jsonData), function (id, obj) {
+//         obj.categorias.forEach(e=>{console.log(e.nombre)})
+//     });
+// });
 // Obtenemos los posts de el usuario actual y los listados en esta cards
 get('/api-posts').then(result => {
+    console.log()
+    if (result.data.length == 0){
+        $("#card_mis_post").append(
+            "<p style='background-color: #d43c3c; color:white'>"+'No se han encontrado posts, porfavor crear '+"</p>"
+        )
+    }else{
     var jsonData = JSON.stringify(result.data);
       $.each(JSON.parse(jsonData), function (id, obj) {
              $("#card_mis_post").append(
@@ -20,9 +32,12 @@ get('/api-posts').then(result => {
                     "<img  src='"+obj.imagen+"' class='img-fluid' alt='...'>"+
                   "<div class='course-content'>"+
                     "<div class='d-flex justify-content-between align-items-center mb-3'>"+
-                      "<h4>"+obj.categoria.nombre+"</h4>"+
+                      "<la>"+obj.categorias.map(e=> "<h4>"+e.nombre+"</h4>")+"</la>"+               
                       "<i class='bx bx-calendar'>" +obj.fecha_publicacion+"</i>"+
                     "</div>"+
+                    "<div class='d-flex justify-content-between align-items-center mb-3'>"+
+                    "<h4 style='background:darkgray; border-radius:41px'>"+obj.tags+"</h4>"+             
+                    "</div>"+                       
                     "<h3><a href='/detalle_post/"+obj.id+"'>"+obj.titulo+"</a></h3>"+
                     "<p >"+obj.descripcion+"</p>"+
                     "<div class='trainer d-flex justify-content-between align-items-center'>"+
@@ -37,8 +52,8 @@ get('/api-posts').then(result => {
                       "</div>"+
                     "</div>"+
                     "<div style='float: right;'>"+
-                    "<a class='badge badge-warning text-white'> Editar</a>"+
-                    "<a class='badge badge-danger'>Eliminar</a>"+
+                    "<a class='badge badge-warning text-white updatemodal' data-update="+ obj.id +"> Editar</a>"+
+                    "<a class='badge badge-danger delete' data-delete="+ obj.id +">Eliminar</a>"+
                   "</div>"+                 
                   "</div>"+
                 "</div>"+
@@ -46,6 +61,7 @@ get('/api-posts').then(result => {
               
         )
       });
+    }  
   });
 
 
@@ -53,17 +69,24 @@ get('/api-posts').then(result => {
 get('/api-categorias').then(result => {
     var jsonData = JSON.stringify(result.data);
     $.each(JSON.parse(jsonData), function (id, obj) {
-        $("#categoria").append('<option value="' + obj.id + '">' + obj.nombre + '</option>');
+        $("#categorias").append('<option value="' + obj.id + '">' + obj.nombre + '</option>');
     });
 });
+
+
+
 
 
 // Inicializamos el Modal para hacer una creacion
 function modalCreate() {
     id = null
+    // limpiamos el div q contiene la imagen
+    $("#image").empty();
+    $("#imagen").val('');
     document.getElementById('titulo').value = ""
-    document.getElementById('categoria').value = 0
+    document.getElementById('categorias').value = ""
     document.getElementById('descripcion').value = ""
+    document.getElementById('tags').value = ""
     document.getElementById('contenido').value = ""
     document.getElementById('fecha_publ').value =  moment().format("YYYY-MM-DD"),
     document.getElementById('fecha_fin').value =  ""
@@ -73,44 +96,96 @@ function modalCreate() {
     $("#ModalCreateOrUpdate").modal('show')
 }
 
-function modalUpdate(id) {
+
+// escuchar evento en la tarjeta para crear un alojamiento
+$('#card_mis_post').on( 'click', '.updatemodal', function (event) {
+  
+    id = this.getAttribute("data-update");
     get('/api-posts/' + id).then(result => {
         var objeto = result.data
-        console.log(objeto)
-        document.getElementById("cantidad").disabled = true;
-        document.getElementById('codigo').value = objeto.codigo
-        document.getElementById('nombre').value = objeto.nombre
-        document.getElementById('categoria').value = objeto.categoria.id
-        document.getElementById('marca').value = objeto.marca ? objeto.marca.id : '0';
-        document.getElementById('presentacion').value = objeto.presentacion ? objeto.presentacion.id : '0';
-        document.getElementById('impuesto').value = objeto.impuesto ? objeto.impuesto.id : '0';
-        document.getElementById('precio_compra').value = objeto.precio_compra
-        document.getElementById('precio_venta').value = objeto.precio_venta
-        document.getElementById('cantidad').value = objeto.cantidad
-        document.getElementById('statusSelect').value = objeto.estado
-        document.getElementById('titleModal').innerText = 'Actualizar Producto';
-        document.getElementById('subtitle').innerText = ' En esta sección puedes Actualizar Productos';
+        $("#image").add();
+        $("#imagen").val('');
+        $("#categorias").val(objeto.categorias.map(e=>(e.id)));
+        $("#image").html('<img src="' + objeto.imagen + '" alt="imagen" style="width: 40px; height: 40px;">')
+        document.getElementById('titulo').value = objeto.titulo
+        document.getElementById('descripcion').value = objeto.descripcion
+        // document.getElementById('categorias').value = objeto.categorias.map(e=> console.log(e.id))
+        document.getElementById('tags').value = objeto.tags
+        document.getElementById('contenido').value = objeto.contenido
+        document.getElementById('fecha_publ').value =  objeto.fecha_publicacion
+        document.getElementById('fecha_fin').value =   objeto.fecha_desactiva
+        document.getElementById('titleModal').innerText = 'Editar Post';
+        document.getElementById('subtitle').innerText = ' En esta sección puedes Editar Posts';
         $("#ModalCreateOrUpdate").modal('show');
     })
-}
+  
+
+ });
+
+
 
 // Funcion para  crear o actualizar el registro
 function CrearOActualizar() {
+     
+    // var data = {
+    //     "titulo": $('#titulo').val(),
+    //     "descripcion": $('#descripcion').val(),
+    //     "tags": array_tags,
+    //     "contenido": $('#contenido').val(),
+    //     "fecha_publicacion": $('#fecha_publ').val(),
+    //     "fecha_desactiva": $('#fecha_fin').val(), 
+    //     "categorias" : categoria,
+    // } 
+
     
+
+    // var files = document.getElementById('imagen').files;
+    // if (files.length > 0) {
+    //   imagen = getBase64(files[0]);
+    // }
+    // function getBase64(file) {
+    //     var reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = function () {
+    //         convertida = reader.result
+    //         console.log('conve',convertida);
+    //     };
+    //     reader.onerror = function (error) {
+    //       console.log('Error: ', error);
+    //     };
+    //  }    
+
+     // convertirnos la cadena de texto a un array 
+    tags =  $('#tags').val(),
+    console.log(tags)
+    array_tags = tags.split(',')
+    console.log(array_tags)
+    // Obtenemos el array
+    array_categoria = $('#categorias').val()
+    console.log(array_categoria)
+    // Recorremos el array y devuelve el array de obj
+    // const categoria = array_categoria.map(function(cat) {
+    //     return ele = {"id":cat}
+    // });
     var data = new FormData();
     data.append('titulo', $('#titulo').val())
-    data.append('categoriaID', $('#categoria').val())
+    data.append('categorias',  String(array_categoria));
     data.append('descripcion', $('#descripcion').val())
+    // for (var i = 0; i < array_tags.length; i++) {
+        
+    // }  
+    data.append('tags', String(array_tags));
     data.append('contenido', $('#contenido').val())
     data.append('fecha_publicacion', $('#fecha_publ').val())
     data.append('fecha_desactiva', $('#fecha_fin').val())
     if ($('#imagen').val() != "") {
         data.append('imagen', $('#imagen')[0].files[0])
-    }    
+    }       
+   
     if (id == null) {
-        // funcion para crear
-        post_imagen('/api-posts/', data, token).then(result => {
-            //location.href = '/mis_posts'
+        // Post para crear
+        post('/api-posts/', data, token).then(result => {
+            window.location.reload(); 
             $("#ModalCreateOrUpdate").modal('hide')
         });
     } else {
@@ -141,12 +216,12 @@ function validForm() {
         $('#descripcion').removeClass("is-invalid")
         $('#descripcion').addClass("is-valid")
     }    
-    if ($('#categoria').val() == 0) {
-        $('#categoria').removeClass("is-valid")
-        $('#categoria').addClass("is-invalid")
+    if ($('#categorias').val() == "") {
+        $('#categorias').removeClass("is-valid")
+        $('#categorias').addClass("is-invalid")
     } else {
-        $('#categoria').removeClass("is-invalid")
-        $('#categoria').addClass("is-valid")
+        $('#categorias').removeClass("is-invalid")
+        $('#categorias').addClass("is-valid")
     }
     if ($('#contenido').val() == "") {
         $('#contenido').removeClass("is-valid")
@@ -174,3 +249,38 @@ function validForm() {
     }
 }
 
+// Eliminar Post
+$('#card_mis_post').on( 'click', '.delete', function (event) {
+
+    id = this.getAttribute("data-delete");
+    Swal.fire({
+      title: '¿Eliminar  Post definitivamente)',
+      text: "¡Eliminar Post Con ID " +id,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3AC162',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Eliminar!'
+    }).then((result) => {
+      if (result.value) { 
+        deleted('/api-posts/'+id+'/',token).then(result => {
+              Swal.fire(
+                  '¡Eliminado!',
+                  'Post fue Eliminado correctamente.',
+                  'success'
+              )
+            window.location.reload();
+          }).catch(function (error) {
+              console.log(error)
+              Swal.fire(
+                  '¡Error!',
+                  'Comentario no se pudo eliminar, consulte con el administrador',
+                  'warning'
+              )
+          })
+
+      }else{
+          
+      }
+    })  
+});
