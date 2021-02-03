@@ -155,13 +155,11 @@ class ViewPost(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         """
         """
-        print('1',request.data)   
         request.data._mutable = True
         request.data['tags'] = list(request.data['tags'].split(",")) 
         request.data['categorias'] = list(request.data['categorias'].split(",")) 
         request.data._mutable = False
         serializer = self.get_serializer(data=request.data)
-        print('2',request.data)   
         if not serializer.is_valid(raise_exception=False):
             raise Exception(serializer.errors)        
             # Buscamos el autor para usarlo al guardar el post
@@ -184,17 +182,14 @@ class ViewPostAll(generics.ListAPIView):
     serializer_class = SerializerPost
     filter_backends = [filters.SearchFilter]
     # Usamos Filter de DRF y filtramos por estos campos
-    search_fields = ['titulo','autor__nombre',]
+    search_fields = ['titulo','autor__username',]
 
     def get(self, request):
         """
             Listamos todos los Posts, filtramos por las fechas de publicacion
         """
         fecha_actual = date.today()
-        # buscador = self.request.GET.get('buscador')
         query = Post.objects.filter(Q(fecha_publicacion__lte = fecha_actual,fecha_desactiva__gte = fecha_actual)).order_by('-fecha_creacion')
-        # if buscador:
-        #     query = Post.objects.filter(Q(fecha_publicacion__lte = fecha_actual,fecha_desactiva__gte = fecha_actual), titulo__contains=buscador) 
         queryset = self.filter_queryset(query)
         serializer = SerializerPost(queryset, many=True, context={'request': request})
         if serializer:
@@ -226,42 +221,28 @@ class PostDetalleView(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, pk):
         try:
-            tags = list(request.data['tags'].split(",")) 
-            # print(tags)
-            # print(request.data['tags'])
-            print(request.data)
-            categorias = list(request.data['categorias'].split(",")) 
-            post = Post.objects.filter(pk=pk).update(titulo=request.data['titulo'],
-                            contenido=request.data['contenido'],fecha_modificacion=timezone.now(), fecha_publicacion=request.data['fecha_publicacion'],
-                            fecha_desactiva=request.data['fecha_desactiva'],descripcion=request.data['descripcion'] )
-            print('post',post)     
-            # post.tags.add(tags)                       
-            # serializer = SerializerPost(post)
-            # if 'categorias' in request.data:
-            #         for categorias in request.data['categorias']:
-            #             cats = Categoria.objects.filter(pk=categorias)
-            #             cats = cats.first()
-            #             post.categorias.add(cats)
-            serializer = SerializerPost(post)
-            return Response({'data': serializer.data}, status=status.HTTP_200_OK,)            
-            
-        #     request.data._mutable = True
-        #     request.data._mutable = False    
-        #     print('2',request.data)        
-        #     instance = self.queryset.get(pk=pk)
-        #     request.data['updated_at'] = timezone.now()
-        #     serializer = self.serializer_class(instance, data=request.data)
-        #     # if not serializer.is_valid(raise_exception=False):
-        #     #     data = {'data': serializer.errors}
-        #     #     return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        #     instance = serializer.save(tags=tags,categorias=categorias)
-        #     if 'categorias' in request.data:
-        #         for categorias in request.data['categorias']:
-        #             cats = Categoria.objects.filter(pk=int(categorias))
-        #             cats = cats.first()
-        #             instance.categorias.add(cats)
-        #     serializer = SerializerPost(instance)
-        #     return Response({'data': serializer.data}, status=status.HTTP_200_OK,)
+            instance = self.queryset.get(pk=pk)
+            request.data._mutable = True
+            request.data['tags'] = list(request.data['tags'].split(",")) 
+            request.data['categorias'] = list(request.data['categorias'].split(",")) 
+            request.data._mutable = False
+            serializer = self.serializer_class(instance, data=request.data, partial=True)
+            if not serializer.is_valid(raise_exception=False):
+                raise Exception(serializer.errors)        
+            instance = serializer.save() 
+            # Buscamos las categorias q tiene este post
+            catte = Categoria.objects.filter(categoria_post=pk)
+            # Recorremos para luego removerlas y no se repitan al volver a guardarlas
+            for c in catte:
+                instance.categorias.remove(c)
+            # Recorremos las nuevas categrias y las agregamos 
+            if 'categorias' in request.data:
+                for categorias in request.data['categorias']:
+                    cats = Categoria.objects.filter(pk=int(categorias))
+                    cats = cats.first()
+                    instance.categorias.add(cats)
+            serializer = SerializerPost(instance)
+            return Response({'data': serializer.data}, status=status.HTTP_201_CREATED,)
         except Exception:
             e = sys.exc_info()[1]
             data = {'message': e.args[0], 'code': 2, 'data': None}
@@ -387,13 +368,15 @@ class CreateBorrarLike(APIView):
                     if like !=None:
                         # Eliminamos el like
                         like.delete()
-                        data = {'message': 'Like quitado', 'code': 1, }
+                        serializerpost = SerializerPost(post)
+                        data = {'message': 'Like quitado', 'code': 1, 'post':serializerpost.data }
                         return Response(data, status=200)
                     # Creamos like
                     else:
                         instance = Like.objects.create(post=post, autor=autor)
                         serializer = SerializerLike(instance)
-                        data = {'message': 'Like asignado', 'code': 1, 'data':serializer.data}
+                        serializerpost = SerializerPost(post)
+                        data = {'message': 'Like asignado', 'code': 1, 'data':serializer.data, 'post':serializerpost.data}
                         return Response(data, status=200)
                 else:
                     data = {'message': 'Por Favor Iniciar Sesion', 'code': 2, 'data':None}

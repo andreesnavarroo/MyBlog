@@ -17,7 +17,7 @@ get('/api-posts/'+id_post).then(result => {
                 "</div>"+                      
                 "<div class='trainer-rank d-flex align-items-center'>"+
                   "<div>"+
-                    "<h4 id='like_post' class='post-like like'><i class='bx bx-heart'>&nbsp; "+obj.cantidad_like+" Likes</i></h4>"+
+                    "<h4 id='like_post' class='post-like like'><i id='i_like' class='bx bx-heart'>&nbsp; "+obj.cantidad_like+" Likes</i></h4>"+
                   "</div>"+
                  " &nbsp;&nbsp;"+
                   "<h4 class='post-like'><i class='bx bx-comment'>&nbsp;"+obj.cantidad_comentarios+" Comentarios</i></h4>"+
@@ -36,8 +36,12 @@ data = {
   }
    // Funcion Click para agregar o quitar like Post
   $('#detall_blog').on( 'click', '.like', function (event) {
-    console.log("escuchando")
     post('/api-like-posts/', data, token).then(result => {
+      if (result.message == 'Like asignado'){
+        $('#like_post').html("  <i id='i_like'  style='background-color: red;' class='bx bx-heart'>&nbsp; "+result.post.cantidad_like+" Likes</i>")
+      }else{
+        $('#like_post').html("  <i id='i_like'  class='bx bx-heart'>&nbsp; "+result.post.cantidad_like+" Likes</i>")
+      }
     });    
   });      
  

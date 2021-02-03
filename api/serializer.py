@@ -76,6 +76,7 @@ class SerializerPost(TaggitSerializer ,serializers.ModelSerializer):
         fields = ('id','categorias','titulo','imagen', 'tags',  'contenido', 'descripcion', 'fecha_publicacion', 'fecha_desactiva', 'cantidad_like','cantidad_comentarios','autor', 'like_post','comentarios_post')        
         depth = 1
         extra_kwargs = {"tags": {"required": False, "allow_null": True}}
+        extra_kwargs = {"tags": {"categorias": False, "allow_null": True}}
     # Obtenemos los likes pertenecientes a cada post 
     def get_like_post(self, obj):
         objetos = Like.objects.filter(post=obj.id).order_by('id')

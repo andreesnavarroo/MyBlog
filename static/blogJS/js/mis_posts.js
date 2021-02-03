@@ -126,53 +126,15 @@ $('#card_mis_post').on( 'click', '.updatemodal', function (event) {
 // Funcion para  crear o actualizar el registro
 function CrearOActualizar() {
      
-    // var data = {
-    //     "titulo": $('#titulo').val(),
-    //     "descripcion": $('#descripcion').val(),
-    //     "tags": array_tags,
-    //     "contenido": $('#contenido').val(),
-    //     "fecha_publicacion": $('#fecha_publ').val(),
-    //     "fecha_desactiva": $('#fecha_fin').val(), 
-    //     "categorias" : categoria,
-    // } 
-
-    
-
-    // var files = document.getElementById('imagen').files;
-    // if (files.length > 0) {
-    //   imagen = getBase64(files[0]);
-    // }
-    // function getBase64(file) {
-    //     var reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    //     reader.onload = function () {
-    //         convertida = reader.result
-    //         console.log('conve',convertida);
-    //     };
-    //     reader.onerror = function (error) {
-    //       console.log('Error: ', error);
-    //     };
-    //  }    
-
      // convertirnos la cadena de texto a un array 
     tags =  $('#tags').val(),
-    console.log(tags)
     array_tags = tags.split(',')
-    console.log(array_tags)
     // Obtenemos el array
     array_categoria = $('#categorias').val()
-    console.log(array_categoria)
-    // Recorremos el array y devuelve el array de obj
-    // const categoria = array_categoria.map(function(cat) {
-    //     return ele = {"id":cat}
-    // });
     var data = new FormData();
     data.append('titulo', $('#titulo').val())
     data.append('categorias',  String(array_categoria));
     data.append('descripcion', $('#descripcion').val())
-    // for (var i = 0; i < array_tags.length; i++) {
-        
-    // }  
     data.append('tags', String(array_tags));
     data.append('contenido', $('#contenido').val())
     data.append('fecha_publicacion', $('#fecha_publ').val())
@@ -192,6 +154,7 @@ function CrearOActualizar() {
         put('/api-posts/' + id + '/', data, token).then(result => {
             $("#ModalCreateOrUpdate").modal('hide')
             id = null
+            // window.location.reload(); 
         })
     }
 

@@ -29,6 +29,7 @@ Python 3 Django
 ```bash
 # Crear entorno virtual y activar
 pip install virtualenv MiEntorno
+# activar entorno virtual ir a la ruta y ejecutar activate
 :\>c:\ruta\al\entorno\virtual\scripts\activate.bat
 # Instalar los requerimientos
 pip install -r requerimientos.txt
@@ -38,7 +39,9 @@ pip install -r requerimientos.txt
 ## Configurar la Base de datos Posgres ⚙️
 - Modificar el archivo settings.py 
 - Reemplazar datos por los que tenga configurado en la base de datos
-```
+```bash
+# Primero crear la base de datos y luego cambiar los datos en el archivo settings.py
+
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql',
@@ -59,10 +62,10 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 ##  Ejecutar script para configuracion incial🚀
-```
-Creacion de grupos, categorias y usuario administrador para acceder al sistema
-- python manage.py runscript script_inicial
-- Luego acceder al sistema utilice estas credenciales
+```bash
+# Creacion de grupos, categorias y usuario administrador para acceder al sistema
+python manage.py runscript script_inicial
+# Luego acceder al sistema utilice estas credenciales
 usuario: admin
 contraseña: admin12345
 
