@@ -1,5 +1,5 @@
 
-# Blog
+# Blog 📋
 ```bash
 # Introduccion
 Cuenta con Login y registro de usuarios
@@ -61,7 +61,7 @@ DATABASES = {
 python manage.py makemigrations
 python manage.py migrate
 ```
-##  Ejecutar script para configuracion incial🚀
+##  Ejecutar script para configuracion inicial🚀
 ```bash
 # Creacion de grupos, categorias y usuario administrador para acceder al sistema
 python manage.py runscript script_inicial

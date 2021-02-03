@@ -154,7 +154,7 @@ function CrearOActualizar() {
         put('/api-posts/' + id + '/', data, token).then(result => {
             $("#ModalCreateOrUpdate").modal('hide')
             id = null
-            // window.location.reload(); 
+            window.location.reload(); 
         })
     }
 
