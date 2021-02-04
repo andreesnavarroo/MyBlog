@@ -202,7 +202,7 @@ class PostDetalleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = SerializerPost
     http_method_names = ['get', 'put','delete']
-    permission_classes = (IsAuthenticated,)
+    
 
     def retrieve(self, request, pk):
         try:
