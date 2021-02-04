@@ -65,7 +65,11 @@
               <!-- Single Comment -->
               {% for coment in comentario %}
               <div class="media mb-4">
+                {% if coment.autor.imagen %}
                   <img class="d-flex mr-3 rounded-circle" style="width:46px" src="{{ coment.autor.imagen.url }}" alt="">
+                  {% else %}
+                    <img class="d-flex mr-3 rounded-circle" style="width:46px" src="{% static 'img/sin_foto.png' %}" alt="">
+                {% endif %}
                   <div class="media-body">
                     <div style="float: right;">
                       {% if request.user.tipo_usuario == "ADMINISTRADOR" or autor.id == coment.autor.id %}
