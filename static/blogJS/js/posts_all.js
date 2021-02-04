@@ -31,7 +31,12 @@ function listar(url){
                     "<p >"+obj.descripcion+"</p>"+
                     "<div class='trainer d-flex justify-content-between align-items-center'>"+
                       "<div class='trainer-profile d-flex align-items-center'>"+
-                        "<img src='"+obj.autor.imagen+"' class='img-fluid' alt='...'>"+
+                       (
+                        obj.autor.imagen != null ?
+                        "<img src='"+obj.autor.imagen+"' class='img-fluid' alt='...'>":
+                        "<img src='static/img/sin_foto.png' %}' class='img-fluid' alt='...'>"
+                        )+
+                        
                         "<span>"+obj.autor.username+"</span>"+
                       "</div>"+
                       "<div class='trainer-rank d-flex align-items-center'>"+
