@@ -17,6 +17,8 @@
 
 {% block conten %}
 <!--block Para la tabla listado de categorias -->
+ 
+    </style>
     <div class="col-md-12">
     <div class="card">
         <div class="card-header">
@@ -52,8 +54,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="header-modal2">
-                        <h5 class="modal-title" id="titleModal" :text="title"></h5>
-                        <span><i class="fas fa-info-circle"></i><small id="subtitle" :text="subtitle">
+                        <h5 class="modal-title text-center" id="titleModal" :text="title"></h5>
+                        
                     </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -66,7 +68,7 @@
                                 <div class="form-group">
                                     <label for="scientific_name">Nombre</label>
                                     <input type="text" step="any" id="nombre" class="form-control"
-                                           placeholder="Nombre Categoria" style="text-transform: uppercase;"
+                                            style="text-transform: uppercase;"
                                            onkeyup="this.value = this.value.toUpperCase();">
                                     <div class="invalid-feedback">
                                         Por favor ingrese un nombre valido

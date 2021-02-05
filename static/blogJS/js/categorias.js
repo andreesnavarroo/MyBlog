@@ -51,8 +51,7 @@ function modalCreate() {
     id=null
     document.getElementById('nombre').value= ""
     document.getElementById('statusSelect').value = true
-    document.getElementById('titleModal').innerText = 'Crear Categoria';
-    document.getElementById('subtitle').innerText = ' En esta sección puedes crear nuevas categorias';
+    document.getElementById('titleModal').innerText = 'Formulario Nueva Categoria';
     $("#ModalCreateOrUpdate").modal('show')
 }
 
@@ -69,8 +68,7 @@ function modalUpdate(id){
         var objeto = result.data
         document.getElementById('nombre').value= objeto.nombre
         document.getElementById('statusSelect').value = objeto.estado
-        document.getElementById('titleModal').innerText = 'Actualizar Categoria';
-        document.getElementById('subtitle').innerText = ' En esta sección puedes Actualizar Categias';
+        document.getElementById('titleModal').innerText = 'Formulario Editar Categoria';
         $("#ModalCreateOrUpdate").modal('show');
     })
 }
