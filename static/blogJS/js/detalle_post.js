@@ -4,7 +4,6 @@ var token = JSON.parse(localStorage.getItem("token"));
 
 get('/api-posts/'+id_post).then(result => {
         obj = result.data
-        console.log(result.data)
            $("#detall_blog").append(
               "<div class='row'>"+
               "<div class='col-lg-8'>"+

@@ -45,8 +45,6 @@ class ViewCategoria(generics.ListCreateAPIView):
         categoria = filtro_categoria(queryset, **request.query_params)
         serializer = SerializerCategoria(categoria['items'], many=True)
         result = dict()
-        result['message'] = 'Categorias'
-        result['code'] = 1
         result['data'] = serializer.data
         result['draw'] = categoria['draw']
         result['recordsTotal'] = categoria['total']
@@ -55,8 +53,6 @@ class ViewCategoria(generics.ListCreateAPIView):
             return Response(result, status=200, template_name=None, content_type=None)
         else:
             result = dict()
-            result['message'] = 'Categorias'
-            result['code'] = 1
             result['data'] = None
             result['draw'] = 0
             result['recordsTotal'] = 0
@@ -97,8 +93,7 @@ class CategoriaDetalleView(generics.RetrieveUpdateDestroyAPIView):
                 return Response(data, status=status.HTTP_200_OK)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
 
     def put(self, request, pk):
         try:
@@ -113,8 +108,8 @@ class CategoriaDetalleView(generics.RetrieveUpdateDestroyAPIView):
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
+
 
     def delete(self, request, pk):  
         # Eliminamos categoria
@@ -125,8 +120,7 @@ class CategoriaDetalleView(generics.RetrieveUpdateDestroyAPIView):
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)                      
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
                                        
 # Vista Post 
 class ViewPost(generics.ListCreateAPIView):
@@ -216,8 +210,8 @@ class PostDetalleView(generics.RetrieveUpdateDestroyAPIView):
                 return Response(data, status=status.HTTP_200_OK)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
+
 
     def put(self, request, pk):
         try:
@@ -245,8 +239,7 @@ class PostDetalleView(generics.RetrieveUpdateDestroyAPIView):
             return Response({'data': serializer.data}, status=status.HTTP_201_CREATED,)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
 
     def delete(self, request, pk):  
         # Eliminamos el Post
@@ -257,8 +250,8 @@ class PostDetalleView(generics.RetrieveUpdateDestroyAPIView):
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)             
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
+        
 
 # Vista Crear Comentario (recibe pk del post)
 class ViewComentario(generics.ListCreateAPIView):
@@ -287,8 +280,7 @@ class ViewComentario(generics.ListCreateAPIView):
             return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST,)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
 
 
 # Vista  Detalle Comentario
@@ -310,8 +302,8 @@ class ComentarioDetalleView(generics.RetrieveUpdateDestroyAPIView):
                 return Response(data, status=status.HTTP_200_OK)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
+
 
     def put(self, request, pk):
         """
@@ -329,8 +321,7 @@ class ComentarioDetalleView(generics.RetrieveUpdateDestroyAPIView):
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
 
     def delete(self, request, pk):  
         # Eliminamos el comentario
@@ -341,8 +332,8 @@ class ComentarioDetalleView(generics.RetrieveUpdateDestroyAPIView):
             return Response(data, status=200)
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)          
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
+       
             
 # Vista crear y borrar like
 class CreateBorrarLike(APIView):
@@ -383,8 +374,8 @@ class CreateBorrarLike(APIView):
                     return Response(data, status=200)                        
         except Exception:
             e = sys.exc_info()[1]
-            data = {'message': e.args[0], 'code': 2, 'data': None}
-            return Response(data, status=409)
+            return Response({'data': e.args[0], },status=status.HTTP_409_CONFLICT)
+
 
 
 
